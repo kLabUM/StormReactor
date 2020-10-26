@@ -3,7 +3,7 @@
 
 ## Overview 
 
-*StormReactor* has been developed in an effort to expand the ability to model stormwater quality and water quality based real-time control in EPA's Stormwater Management Model (SWMM). It is a natural extension of Open-Storm's mission to open up and ease access into the technical world of smart stormwater systems. *StormReactor*  package enables anyone to model any stormwater pollutant treatment or generation method in any node or link in SWMM. A user can implement any SWMM treatment function defined in the *SWMM Reference Manual Volume III: Water Quality* or create their own.   
+*StormReactor* was developed to expand the ability to model stormwater quality and water quality based real-time control in EPA's Stormwater Management Model (SWMM). It is a natural extension of *[Open-Storm]*'s(http://open-storm.org/) mission to open up and ease access into the technical world of smart stormwater systems. *StormReactor* enables users to model any stormwater pollutant treatment or generation method in any node or link in a stormwater network. A user can implement any SWMM treatment function defined in the *SWMM Reference Manual Volume III: Water Quality* or create their own.   
 
 
 ## Getting Started 
@@ -27,7 +27,7 @@ Please raise an issue on the repository or reach out if you run into any issues 
 
 ### Simple Example 
 
-Here is a simple example on how to use this *StormReactor* for modeling a variety of water quality methods (gravity settling, CSTR, and erosion) for two pollutants (TSS and nitrate) in several stormwater assets (basin, wetland, and channel).
+Here is a simple example on how to use *StormReactor* for modeling a variety of water quality methods (e.g., gravity settling, CSTR, erosion) for two pollutants (e.g., TSS, nitrate) in several stormwater assets (e.g., basin, wetland, channel).
 
 ```python 
 # import packages
@@ -83,7 +83,7 @@ def _NewMethod(self, ID, pollutant_ID, dictionary, flag):
 	"""
 	CODE BLOCK
 	New method code to calculate new pollutant concentration, here referred to as Cnew.
-	Set the concentration in SWMM using the appropriate setters determined if it is a node or link using the flag feature.
+	Set the concentration in SWMM using the appropriate setters using the flag feature.
 	"""
 	if self.flag == 0:
 		self.sim._model.setNodePollutant(ID, pollutant_ID, Cnew)
@@ -91,7 +91,7 @@ def _NewMethod(self, ID, pollutant_ID, dictionary, flag):
 		self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 	
 ```
-4. Now run your new model! Modify as neeeded.
+4. Now run your new model! Modify code as needed.
 
 ### Bugs
 
@@ -102,6 +102,6 @@ Our issue tracker is at https://github.com/kLabUM/StormReactor/issues. Please re
 If you want to contribute your water quality methods to *StormReactor*, please follow these steps:
 1. Raise an issue on the issue tracker at https://github.com/kLabUM/StormReactor/issues to describe the new method you are proposing to add. 
 2. Follow the steps above in "Creating Your Own Water Quality Method" to build your new method. 
-3. Create tests to confirm your new method works. Please follow the format for node and link tests here: https://github.com/kLabUM/StormReactor/tree/master/tests. 
+3. Create tests to confirm your new method works. Please follow the format for node and link tests as shown at https://github.com/kLabUM/StormReactor/tree/master/tests. 
 4. Submit a pull request at https://github.com/kLabUM/StormReactor/pulls to merge your edits with the existing *StormReactor* code base.
-Note: There might be comments, suggestions, questions. We're all working together to produce cohesive and high-quality software.
+Note: There might be comments, suggestions, and questions. We're all working together to produce cohesive and high-quality software.
