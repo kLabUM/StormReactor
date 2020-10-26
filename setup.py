@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="StormReactor",
     version="0.1.0",
-    description="StormReactor: Python package for modelling any pollutant generation or removal method in SWMM",
+    description="StormReactor: Python package for modelling any pollutant generation or treatment method in SWMM",
     author="Brooke Mason, Abhiram Mullapudi",
     author_email="bemason@umich.edu, abhiramm@umich.edu",
     long_description=long_description,
