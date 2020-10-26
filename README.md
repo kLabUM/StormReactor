@@ -1,4 +1,4 @@
-# StormReactor: Python package for modeling any pollutant generation or removal method in SWMM
+# StormReactor: Python package for modeling any pollutant generation or treatment method in EPA SWMM
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 ## Overview 
