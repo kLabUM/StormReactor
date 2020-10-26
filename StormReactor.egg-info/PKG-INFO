@@ -1,0 +1,51 @@
+Metadata-Version: 2.1
+Name: StormReactor
+Version: 0.1.0
+Summary: StormReactor: Python package for modelling any pollutant generation or removal method in SWMM
+Home-page: https://github.com/kLabUM/StormReactor
+Author: Brooke Mason, Abhiram Mullapudi
+Author-email: bemason@umich.edu, abhiramm@umich.edu
+License: UNKNOWN
+Description: # StormReactor: Python package for modeling any pollutant generation or removal method in SWMM
+        [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
+        
+        ## Overview 
+        
+        This library has been developed in an effort to systematize quantitative analysis of stormwater control algorithms. It is a natural extension of the Open-Storm's mission to open up and ease access into the technical world of smart stormwater systems. We have now developed a toolbox so that anyone can model any stormwater pollutant treatment method in any node or link. One can implement any SWMM treatment or any user-defined treatment.   
+        
+        
+        ## Getting Started 
+        
+        ### Installation 
+        
+        **Requirements**
+        
+        - python 3+
+        - numpy
+        - pyswmm
+        - scipy
+        
+        
+        ```bash 
+        pip install StormReactor
+        ```
+        
+        Please raise an issue on the repository or reach out if you run into any issues installing the package. 
+        
+        ### Example 
+        
+        Here is an example implementation on how you would use this library for evaluating the ability of a rule based control in maintaining the flows in a network below a desired threshold. 
+        
+        ```python 
+        import StormReactor
+        from pyswmm import Simulations,Nodes
+        
+        # Enter example here
+        
+        ```
+        
+Platform: UNKNOWN
+Classifier: Programming Lanageuage :: Python :: 3
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown

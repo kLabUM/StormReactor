@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/kLabUM/StormReactor",
     packages=['StormReactor'],
     classifiers=[
-        "Programming Lanageuage :: Python :: 3",
+        "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Operating System :: OS Independent",
     ],
@@ -23,6 +23,6 @@ setuptools.setup(
         "pyswmm",
         "scipy",
     ],
-
+    python_requires='>=3.6',
 )
 
