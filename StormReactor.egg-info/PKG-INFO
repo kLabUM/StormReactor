@@ -45,7 +45,8 @@ Description: # StormReactor: Python package for modeling any pollutant generatio
         ```
         
 Platform: UNKNOWN
-Classifier: Programming Lanageuage :: Python :: 3
+Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
 Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
 Description-Content-Type: text/markdown

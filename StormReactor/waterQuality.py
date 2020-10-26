@@ -1,4 +1,4 @@
-from pyswmm.simulation import Simulation, Nodes, Links
+from pyswmm import Simulation, Nodes, Links
 import numpy as np
 from scipy.integrate import ode 
 
@@ -32,18 +32,18 @@ class waterQuality:
         self.last_timestep = self.start_time
         self.solver = ode(self.CSTR_tank)
 
-    # Water quality methods
-    self.method = {
-        "EventMeanConc": self._EventMeanConc,
-        "ConstantRemoval": self._ConstantRemoval,
-        "CoRemoval": self._CoRemoval,
-        "ConcDependRemoval": self._ConcDependRemoval,
-        "NthOrderReaction": self._NthOrderReaction,
-        "kCModel": self._kCModel,
-        "GravitySettling": self._GravitySettling,
-        "Erosion": self._Erosion,
-        "CSTR": self._CSTRSolver,
-        }
+        # Water quality methods
+        self.method = {
+            "EventMeanConc": self._EventMeanConc,
+            "ConstantRemoval": self._ConstantRemoval,
+            "CoRemoval": self._CoRemoval,
+            "ConcDependRemoval": self._ConcDependRemoval,
+            "NthOrderReaction": self._NthOrderReaction,
+            "kCModel": self._kCModel,
+            "GravitySettling": self._GravitySettling,
+            "Erosion": self._Erosion,
+            "CSTR": self._CSTRSolver,
+            }
 
 
     def updateWQState(self):
@@ -179,7 +179,7 @@ class waterQuality:
             self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-def _NthOrderReaction(self, ID, pollutant_ID, dictionary, flag):
+    def _NthOrderReaction(self, ID, pollutant_ID, dictionary, flag):
         """
         NTH ORDER REACTION KINETICS (SWMM Water Quality Manual, 2016)
         When treatment of pollutant X exhibits n-th order reaciton kinetics
