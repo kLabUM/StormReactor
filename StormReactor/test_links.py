@@ -1,4 +1,4 @@
-import StormReactor
+from StormReactor import waterQuality
 from pyswmm import Simulation, Nodes, Links
 import numpy as np
 from sklearn.metrics import mean_squared_error as mse
