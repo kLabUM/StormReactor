@@ -51,7 +51,7 @@ with Simulation('example.inp') as sim:
 
 ```
 
-### Creating Your Own Water Quality Method
+## Creating Your Own Water Quality Method
 
 To create a new water quality method, follow the steps below:
 1. Fork the repository to your own personal repository.
@@ -93,11 +93,11 @@ def _NewMethod(self, ID, pollutant_ID, dictionary, flag):
 ```
 4. Now run your new model! Modify code as needed.
 
-### Bugs
+## Bugs
 
 Our issue tracker is at https://github.com/kLabUM/StormReactor/issues. Please report any bugs that you find. Or even better, fork the repository on GitHub and create a pull request. All changes are welcome, big or small, and we will help make the pull request if you are new to git (just ask on the issue).
 
-### Contributions
+## Contributions
 
 If you want to contribute your water quality methods to *StormReactor*, please follow these steps:
 1. Raise an issue on the issue tracker at https://github.com/kLabUM/StormReactor/issues to describe the new method you are proposing to add. 
