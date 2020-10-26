@@ -1,4 +1,4 @@
-import StormReactor
+import StormReactor.waterQuality
 from pyswmm import Simulation, Nodes, Links
 import numpy as np
 from sklearn.metrics import mean_squared_error as mse
@@ -20,7 +20,7 @@ load downstream.
 # SWMM WATER QUALITY METHODS
 # Event Mean Concentration
 def test_EventMeanConc_load():
-    dict1 = {'Culvert': {0: 5.0}}
+    dict1 = {'Culvert': {'pollutant': 0, 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -48,7 +48,7 @@ def test_EventMeanConc_load():
 
 # Constant Removal
 def test_ConstantRemoval_load():
-    dict1 = {'Culvert': {0: 0.5}}
+    dict1 = {'Culvert': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'C': 5.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -76,8 +76,8 @@ def test_ConstantRemoval_load():
 
 # CoRemoval
 def test_CoRemoval_load():
-    dict1 = {'Culvert': {0: [0.75, 0.15]}}
-    dict2 = {'Culvert': {1: 0.15}}
+    dict1 = {'Culvert': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}},\
+            'Culvert': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}}}
     conc = []
     conc1 = []
     flow = []
@@ -105,7 +105,7 @@ def test_CoRemoval_load():
 
 # ConcDependRemoval
 def test_ConcDependRemoval_load():
-    dict1 = {'Culvert': {0: [0.50, 10.0, 0.75]}}
+    dict1 = {'Culvert': {'pollutant': 0, 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
     conc = []
     conc1 = []
     flow = []
@@ -133,7 +133,7 @@ def test_ConcDependRemoval_load():
 
 # NthOrderReaction
 def test_NthOrderReaction_load():
-    dict1 = {'Culvert': {0: [0.01, 2.0]}}
+    dict1 = {'Culvert': {'pollutant': 0, 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -161,7 +161,7 @@ def test_NthOrderReaction_load():
   
 # GravitySettling
 def test_GravitySettling_load():
-    dict1 = {'Culvert': {0: [0.01, 10.0]}}
+    dict1 = {'Culvert': {'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -189,7 +189,7 @@ def test_GravitySettling_load():
 
 # Erosion
 def test_Erosion_load():
-    dict1 = {'Channel': {0: [10.0, 0.001, 2.68, 0.7]}}
+    dict1 = {'Channel': {'pollutant': 0, 'method': 'Erosion', 'parameters': {'w': 10.0, 'So': 0.001, 'Ss': 2.68, 'd50': 0.7}}}
     conc = []
     conc1 = []
     flow = []

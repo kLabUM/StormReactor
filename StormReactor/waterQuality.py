@@ -1,4 +1,4 @@
-from pyswmm import Simulation, Nodes, Links
+from pyswmm.simulation import Simulation, Nodes, Links
 import numpy as np
 from scipy.integrate import ode 
 
@@ -14,6 +14,14 @@ class waterQuality:
         dictionary with node/links where water quality methods are to 
         be simulated, the pollutants to simulate, the pollutant water
         quality method to simulate, and the method's parameters.
+
+        example:
+        config = {
+            '11': {'pollutant': 0, 'method': 'EventMeanConc', 'parameters': {"C": 10}}, \
+            '5': {'pollutant': 0, 'method': 'EventMeanConc', 'parameters': {"C": 10}}, \
+            'Link1': {'pollutant': 0, 'method': 'EventMeanConc', 'parameters': {"C": 10}}, 
+            'Link2': {'pollutant': 0, 'method': 'EventMeanConc', 'parameters': {"C": 10}}
+            }
 
     Methods
     _______
@@ -32,18 +40,18 @@ class waterQuality:
         self.last_timestep = self.start_time
         self.solver = ode(self.CSTR_tank)
 
-        # Water quality methods
-        self.method = {
-            "EventMeanConc": self._EventMeanConc,
-            "ConstantRemoval": self._ConstantRemoval,
-            "CoRemoval": self._CoRemoval,
-            "ConcDependRemoval": self._ConcDependRemoval,
-            "NthOrderReaction": self._NthOrderReaction,
-            "kCModel": self._kCModel,
-            "GravitySettling": self._GravitySettling,
-            "Erosion": self._Erosion,
-            "CSTR": self._CSTRSolver,
-            }
+    # Water quality methods
+    self.method = {
+        "EventMeanConc": self._EventMeanConc,
+        "ConstantRemoval": self._ConstantRemoval,
+        "CoRemoval": self._CoRemoval,
+        "ConcDependRemoval": self._ConcDependRemoval,
+        "NthOrderReaction": self._NthOrderReaction,
+        "kCModel": self._kCModel,
+        "GravitySettling": self._GravitySettling,
+        "Erosion": self._Erosion,
+        "CSTR": self._CSTRSolver,
+        }
 
 
     def updateWQState(self):
@@ -179,7 +187,7 @@ class waterQuality:
             self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-    def _NthOrderReaction(self, ID, pollutant_ID, dictionary, flag):
+def _NthOrderReaction(self, ID, pollutant_ID, dictionary, flag):
         """
         NTH ORDER REACTION KINETICS (SWMM Water Quality Manual, 2016)
         When treatment of pollutant X exhibits n-th order reaciton kinetics
@@ -371,7 +379,7 @@ class waterQuality:
                     self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-    def CSTR_tank(self, t, C, Qin, Cin, Qout, V, k, n):
+    def _CSTR_tank(self, t, C, Qin, Cin, Qout, V, k, n):
         """
         UNSTEADY CONTINUOUSLY STIRRED TANK REACTOR (CSTR)
         CSTR is a common model for a chemical reactor. The behavior of a CSTR
@@ -385,7 +393,7 @@ class waterQuality:
         return dCdt
 
 
-    def CSTRSolver(self, index, ID, pollutant_ID, dictionary, flag):
+    def _CSTRSolver(self, index, ID, pollutant_ID, dictionary, flag):
         """
         UNSTEADY CONTINUOUSLY STIRRED TANK REACTOR (CSTR) SOLVER
         CSTR is a common model for a chemical reactor. The behavior of a CSTR
