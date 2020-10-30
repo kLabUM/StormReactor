@@ -1,4 +1,4 @@
-from pyswmm.simulation import Simulation, Nodes, Links
+from pyswmm import Simulation, Nodes, Links
 import numpy as np
 from scipy.integrate import ode 
 
@@ -40,18 +40,18 @@ class waterQuality:
         self.last_timestep = self.start_time
         self.solver = ode(self.CSTR_tank)
 
-    # Water quality methods
-    self.method = {
-        "EventMeanConc": self._EventMeanConc,
-        "ConstantRemoval": self._ConstantRemoval,
-        "CoRemoval": self._CoRemoval,
-        "ConcDependRemoval": self._ConcDependRemoval,
-        "NthOrderReaction": self._NthOrderReaction,
-        "kCModel": self._kCModel,
-        "GravitySettling": self._GravitySettling,
-        "Erosion": self._Erosion,
-        "CSTR": self._CSTRSolver,
-        }
+        # Water quality methods
+        self.method = {
+            "EventMeanConc": self._EventMeanConc,
+            "ConstantRemoval": self._ConstantRemoval,
+            "CoRemoval": self._CoRemoval,
+            "ConcDependRemoval": self._ConcDependRemoval,
+            "NthOrderReaction": self._NthOrderReaction,
+            "kCModel": self._kCModel,
+            "GravitySettling": self._GravitySettling,
+            "Erosion": self._Erosion,
+            "CSTR": self._CSTRSolver,
+            }
 
 
     def updateWQState(self):
@@ -187,39 +187,39 @@ class waterQuality:
             self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-def _NthOrderReaction(self, ID, pollutant_ID, dictionary, flag):
-        """
-        NTH ORDER REACTION KINETICS (SWMM Water Quality Manual, 2016)
-        When treatment of pollutant X exhibits n-th order reaciton kinetics
-        where the instantaneous reaction rate is kC^n.
-        
-        k   = reaction rate constant (SI: m/hr, US: ft/hr)
-        n   = reaction order (first order, second order, etc.) (unitless)
-        """
+    def _NthOrderReaction(self, ID, pollutant_ID, dictionary, flag):
+            """
+            NTH ORDER REACTION KINETICS (SWMM Water Quality Manual, 2016)
+            When treatment of pollutant X exhibits n-th order reaciton kinetics
+            where the instantaneous reaction rate is kC^n.
+            
+            k   = reaction rate constant (SI: m/hr, US: ft/hr)
+            n   = reaction order (first order, second order, etc.) (unitless)
+            """
 
-        parameters = dictionary
+            parameters = dictionary
 
-        # Get current time
-        current_step = self.sim.current_time
-        # Calculate model dt in seconds
-        dt = (current_step - self.last_timestep).total_seconds()
-        # Update reference step
-        self.last_timestep = current_step
+            # Get current time
+            current_step = self.sim.current_time
+            # Calculate model dt in seconds
+            dt = (current_step - self.last_timestep).total_seconds()
+            # Update reference step
+            self.last_timestep = current_step
 
-        if flag == 0:
-            # Get SWMM parameter
-            C = self.sim._model.getNodeC2(ID, pollutant_ID)
-            # Calculate treatment
-            Cnew = C - (parameters["k"]*(C**parameters["n"])*dt)
-            # Set new concentration
-            self.sim._model.setNodePollutant(ID, pollutant_ID, Cnew)
-        else:
-            # Get SWMM parameter
-            C = self.sim._model.getLinkC2(ID, pollutant_ID)
-            # Calculate treatment
-            Cnew = C - (parameters["k"]*(C**parameters["n"])*dt)
-            # Set new concentration
-            self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
+            if flag == 0:
+                # Get SWMM parameter
+                C = self.sim._model.getNodeC2(ID, pollutant_ID)
+                # Calculate treatment
+                Cnew = C - (parameters["k"]*(C**parameters["n"])*dt)
+                # Set new concentration
+                self.sim._model.setNodePollutant(ID, pollutant_ID, Cnew)
+            else:
+                # Get SWMM parameter
+                C = self.sim._model.getLinkC2(ID, pollutant_ID)
+                # Calculate treatment
+                Cnew = C - (parameters["k"]*(C**parameters["n"])*dt)
+                # Set new concentration
+                self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
     def _kCModel(self, ID, pollutant_ID, dictionary, flag):
