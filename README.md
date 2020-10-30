@@ -17,11 +17,17 @@
 - pyswmm
 - scipy
 
-Get the latest version of StormReactor from https://pypi.python.org/pypi/StormReactor/.
+We are still waiting on the SWMM pull request to be accepted. You can find our pull request here: https://github.com/OpenWaterAnalytics/Stormwater-Management-Model/pull/302. Once the pull request has been approved, a similar PySWMM pull request will be initiated. Then, the final version of StormReactor will be available 
+through PyPI at https://pypi.python.org/pypi/StormReactor/.
 
 ```bash 
 $ pip install StormReactor
 ```
+
+For now, please download directly from the following GitHub repositories.
+StormReactor: https://github.com/kLabUM/StormReactor
+Modified PySWMM: https://github.com/bemason/pyswmm_BM
+Modified SWMM: https://github.com/bemason/SWMM_BM
 
 Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
