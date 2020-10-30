@@ -87,13 +87,13 @@
   Groundwater Inflow .......         0.000         0.000
   RDII Inflow ..............         0.000         0.000
   External Inflow ..........         0.000         0.000
-  External Outflow .........        74.096        70.965
+  External Outflow .........        83.478        83.478
   Flooding Loss ............         0.000         0.000
   Exfiltration Loss ........         0.000         0.000
-  Mass Reacted .............         9.471        12.585
+  Mass Reacted .............         0.000         0.000
   Initial Stored Mass ......         0.000         0.000
   Final Stored Mass ........         0.000         0.000
-  Continuity Error (%) .....        -0.294        -0.274
+  Continuity Error (%) .....        -0.187        -0.187
   
   
   ***************************
@@ -206,9 +206,9 @@
                          Freq      Flow      Flow      Volume            P1            P2
   Outfall Node           Pcnt       CMS       CMS    10^6 ltr            kg            kg
   ---------------------------------------------------------------------------------------
-  Outfall               68.34     1.778     2.778      35.000        74.096        70.965
+  Outfall               68.34     1.778     2.778      35.000        83.478        83.478
   ---------------------------------------------------------------------------------------
-  System                68.34     1.778     2.778      35.000        74.096        70.965
+  System                68.34     1.778     2.778      35.000        83.478        83.478
   
   
   ********************
@@ -249,9 +249,9 @@
                                   P1            P2
   Link                            kg            kg
   ------------------------------------------------
-  Valve                       74.096        70.965
+  Valve                       83.478        83.478
   
 
-  Analysis begun on:  Tue May 19 09:54:57 2020
-  Analysis ended on:  Tue May 19 09:54:58 2020
-  Total elapsed time: 00:00:01
+  Analysis begun on:  Fri Oct 30 15:25:08 2020
+  Analysis ended on:  Fri Oct 30 15:25:08 2020
+  Total elapsed time: < 1 sec

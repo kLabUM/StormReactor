@@ -24,7 +24,7 @@ def test_EventMeanConc_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
         EMC = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -47,12 +47,12 @@ def test_EventMeanConc_load():
 
 # Constant Removal
 def test_ConstantRemoval_load():
-    dict1 = {'Culvert': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'C': 5.0}}}
+    dict1 = {'Culvert': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 5.0}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
         CR = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -81,7 +81,7 @@ def test_CoRemoval_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow2.inp") as sim:
+    with Simulation("./tests/inps/LinkTest_variableinflow2.inp") as sim:
         CR = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -109,7 +109,7 @@ def test_ConcDependRemoval_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
         CDR = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -137,7 +137,7 @@ def test_NthOrderReaction_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
         NOR = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -165,7 +165,7 @@ def test_GravitySettling_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
         GS = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -193,7 +193,7 @@ def test_Erosion_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
         ER = waterQuality(sim, dict1)
         channel = Links(sim)["Channel"]
         tailwater = Nodes(sim)["TailWater"]

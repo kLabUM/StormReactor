@@ -63,13 +63,13 @@
   Groundwater Inflow .......         0.000
   RDII Inflow ..............         0.000
   External Inflow ..........       571.407
-  External Outflow .........    458131.654
+  External Outflow .........       570.186
   Flooding Loss ............         0.000
   Exfiltration Loss ........         0.000
   Mass Reacted .............         0.000
   Initial Stored Mass ......         0.000
-  Final Stored Mass ........       980.746
-  Continuity Error (%) .....    -80247.736
+  Final Stored Mass ........         1.216
+  Continuity Error (%) .....         0.001
   
   
   ***************************
@@ -159,9 +159,9 @@
                          Freq      Flow      Flow      Volume            P1
   Outfall Node           Pcnt       CFS       CFS    10^6 gal           lbs
   -------------------------------------------------------------------------
-  TailWater             75.72     67.20    151.63       6.851    458131.654
+  TailWater             75.72     67.20    151.63       6.851       570.186
   -------------------------------------------------------------------------
-  System                75.72     67.20    151.63       6.851    458131.654
+  System                75.72     67.20    151.63       6.851       570.186
   
   
   ********************
@@ -212,10 +212,10 @@
   Link                           lbs
   ----------------------------------
   Culvert                    571.409
-  Channel                  4.581e+05
+  Channel                    570.186
   Roadway                      0.000
   
 
-  Analysis begun on:  Tue May 19 09:54:48 2020
-  Analysis ended on:  Tue May 19 09:54:49 2020
+  Analysis begun on:  Fri Oct 30 15:25:01 2020
+  Analysis ended on:  Fri Oct 30 15:25:02 2020
   Total elapsed time: 00:00:01

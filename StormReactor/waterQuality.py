@@ -35,10 +35,10 @@ class waterQuality:
         self.config = config
         self.nodes = Nodes(sim)
         self.links = Links(sim)
-        self.flag = flag
+        self.flag = 0
         self.start_time = self.sim.start_time
         self.last_timestep = self.start_time
-        self.solver = ode(self.CSTR_tank)
+        self.solver = ode(self._CSTR_tank)
 
         # Water quality methods
         self.method = {
@@ -60,22 +60,21 @@ class waterQuality:
         concentration during a SWMM simulation.
         """
 
-        for node,link in zip(nodes,links):
-            for asset_ID, asset_info in config.items():
-        
-                if node.nodeid == asset_ID:
-                    self.flag = 0
-                    for key in asset_info:
-                        self.method[key](self.config[asset_ID], \
-                            self.config[asset_ID][pollutant_ID], \
-                            self.config[asset_ID][parameters], self.flag)
+        for self.node, self.link in zip(self.nodes,self.links):
+            for asset_ID, asset_info in self.config.items():
+                attribute = self.config[asset_ID]['method']
 
-                if link.linkid == asset_ID:
+                if self.node.nodeid == asset_ID:
+                    self.flag = 0
+                    self.method[attribute](asset_ID, \
+                            self.config[asset_ID]['pollutant'], \
+                            self.config[asset_ID]['parameters'], self.flag)
+                
+                if self.link.linkid == asset_ID:
                     self.flag = 1
-                    for key in asset_info:
-                        self.method[key](self.config[asset_ID], \
-                            self.config[asset_ID][pollutant_ID], 
-                            self.config[asset_ID][parameters], self.flag)
+                    self.method[attribute](asset_ID, \
+                            self.config[asset_ID]['pollutant'], \
+                            self.config[asset_ID]['parameters'], self.flag)
 
 
     def _EventMeanConc(self, ID, pollutant_ID, dictionary, flag):
@@ -138,7 +137,7 @@ class waterQuality:
             # Get SWMM parameter
             Cin = self.sim._model.getNodeCin(ID, pollutant_ID)
             # Calculate new concentration
-            Cnew = (1-parameters["R1"]*paramters["R2"])*Cin
+            Cnew = (1-parameters["R1"]*parameters["R2"])*Cin
             # Set new concentration
             self.sim._model.setNodePollutant(ID, pollutant_ID, Cnew)
         else:
@@ -167,8 +166,8 @@ class waterQuality:
             # Get SWMM parameter
             Cin = self.sim._model.getNodeCin(ID, pollutant_ID)
             # Calculate removal
-            R = (1-np.heaviside((parameters["Cin"]-parameters["BC"]), 0))\
-            *parameters["R_l"]+np.heaviside((parameters["Cin"]\
+            R = (1-np.heaviside((Cin-parameters["BC"]), 0))\
+            *parameters["R_l"]+np.heaviside((Cin\
             -parameters["BC"]),0)*parameters["R_u"]
             # Calculate new concentration
             Cnew = (1-parameters["R"])*Cin
@@ -178,11 +177,11 @@ class waterQuality:
             # Get SWMM parameter
             Cin = self.sim._model.getLinkC2(ID, pollutant_ID)
             # Calculate removal
-            R = (1-np.heaviside((parameters["Cin"]-parameters["BC"]), 0))\
-            *parameters["R_l"]+np.heaviside((parameters["Cin"]\
+            R = (1-np.heaviside((Cin-parameters["BC"]), 0))\
+            *parameters["R_l"]+np.heaviside((Cin\
             -parameters["BC"]),0)*parameters["R_u"]
             # Calculate new concentration
-            Cnew = (1-parameters["R"])*Cin
+            Cnew = (1-R)*Cin
             # Set new concentration
             self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
@@ -206,7 +205,7 @@ class waterQuality:
             # Update reference step
             self.last_timestep = current_step
 
-            if flag == 0:
+            if self.flag == 0:
                 # Get SWMM parameter
                 C = self.sim._model.getNodeC2(ID, pollutant_ID)
                 # Calculate treatment
@@ -234,7 +233,7 @@ class waterQuality:
 
         parameters = dictionary
 
-        if flag == 0:
+        if self.flag == 0:
             # Get SWMM parameters
             Cin = self.sim._model.getNodeCin(ID, pollutant_ID)
             d = self.sim._model.getNodeResult(ID, 5)
@@ -246,7 +245,7 @@ class waterQuality:
             else:
                 R = 0
             # Calculate new concentration
-            Cnew = (1-R)*parameters["Cin"]
+            Cnew = (1-R)*Cin
             # Set new concentration
             self.sim._model.setNodePollutant(ID, pollutant_ID, Cnew) 
         else:
@@ -272,7 +271,7 @@ class waterQuality:
         # Update reference step
         self.last_timestep = current_step
         
-        if flag == 0:
+        if self.flag == 0:
             # Get SWMM parameters
             Cin = self.sim._model.getNodeCin(ID, pollutant_ID)
             Qin = self.sim._model.getNodeResult(ID, 0)
@@ -300,7 +299,7 @@ class waterQuality:
                 Cnew = np.heaviside((0.1-Q), 0)*parameters["C_s"]\
                 +(C-parameters["C_s"])+(1-np.heaviside((0.1-Q), 0))*C
             # Set new concentration
-            self.sim._model.setLinkPollutant(link, pollutant_ID, Cnew)
+            self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
     def _Erosion(self, ID, pollutant_ID, dictionary, flag): 
@@ -327,7 +326,7 @@ class waterQuality:
         # Updating reference step
         self.last_timestep = current_step
 
-        if flag == 0:
+        if self.flag == 0:
             print("Erosion does not work for nodes.")
         else:
             # Get SWMM parameters
@@ -418,7 +417,7 @@ class waterQuality:
         # Updating reference step
         self.last_timestep = current_step
 
-        if flag == 0:
+        if self.flag == 0:
             # Get parameters
             Qin = self.sim._model.getNodeResult(ID, 0)
             Cin = self.sim._model.getNodeCin(ID, pollutant_ID)
