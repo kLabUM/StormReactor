@@ -24,10 +24,10 @@ through PyPI at https://pypi.python.org/pypi/StormReactor/.
 $ pip install StormReactor
 ```
 
-For now, please download directly from the following GitHub repositories.
-StormReactor: https://github.com/kLabUM/StormReactor
-Modified PySWMM: https://github.com/bemason/pyswmm_BM
-Modified SWMM: https://github.com/bemason/SWMM_BM
+For now, please download directly from the following GitHub repositories.  
+StormReactor: https://github.com/kLabUM/StormReactor  
+Modified PySWMM: https://github.com/bemason/pyswmm_BM  
+Modified SWMM: https://github.com/bemason/SWMM_BM  
 
 Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
