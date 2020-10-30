@@ -35,10 +35,10 @@ import StormReactor
 from pyswmm import Simulation
 
 # build water quality configuration dictionary
-config = {'detention_basin': { 'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}},\
-			'wetland': { 'pollutant': 1, 'method': 'CSTR', 'parameters': {'k': -0.20, 'n': 1.0, 'Co': 0.0}},\
-			'channel': { 'pollutant': 0, 'method': 'Erosion', 'parameters': {'w': 10.0, 'So': 0.001, 'Ss': 2.68, 'd50': 0.7}},\
-					{ 'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+config = {'detention_basin': { 'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}},\
+			'wetland': { 'pollutant': 1, 'method': 'CSTR', 'parameters': {'k': -0.000089, 'n': 1.0, 'Co': 0.0}},\
+			'channel': { 'pollutant': 0, 'method': 'Erosion', 'parameters': {'w': 10.0, 'So': 0.037, 'Ss': 1.6, 'd50': 0.04}},\
+					{ 'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}}}
 
 
 # initialize water quality

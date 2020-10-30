@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="StormReactor",
-    version="0.1.0",
+    version="0.0.1",
     description="StormReactor: Python package for modelling any pollutant generation or treatment method in SWMM",
     author="Brooke Mason, Abhiram Mullapudi",
     author_email="bemason@umich.edu, abhiramm@umich.edu",
@@ -19,9 +19,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        "numpy>=1.18.4",
-        "pyswmm",
-        "scipy",
+        "numpy>=1.19.0",
+        "pyswmm>=0.6.2",
+        "scipy>=1.19.3",
     ],
     python_requires='>=3.6',
 )
