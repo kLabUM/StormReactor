@@ -33,8 +33,6 @@ class waterQuality:
     def __init__(self, sim, config):
         self.sim = sim
         self.config = config
-        self.nodes = Nodes(sim)
-        self.links = Links(sim)
         self.flag = 0
         self.start_time = self.sim.start_time
         self.last_timestep = self.start_time
@@ -56,28 +54,46 @@ class waterQuality:
 
     def updateWQState(self):
         """
-        Runs the selected water quality method and updates the pollutant
+        Runs the selected water quality method (except CSTR, for CSTR 
+        run updateCSTRWQState() ) and updates the pollutant
         concentration during a SWMM simulation.
         """
+        nodes = Nodes(self.sim)
+        links = Links(self.sim)
 
-        for self.node, self.link in zip(self.nodes,self.links):
-            for asset_ID, asset_info in self.config.items():
-                attribute = self.config[asset_ID]['method']
-
-                if self.node.nodeid == asset_ID:
+        for asset_ID, asset_info in self.config.items():
+            for node in nodes:
+                attribute =self.config[asset_ID]['method']
+                
+                if node.nodeid == asset_ID:
                     self.flag = 0
                     self.method[attribute](asset_ID, \
                             self.config[asset_ID]['pollutant'], \
                             self.config[asset_ID]['parameters'], self.flag)
-                
-                if self.link.linkid == asset_ID:
+            
+            for link in links: 
+                attribute =self.config[asset_ID]['method']
+       
+                if link.linkid == asset_ID:
                     self.flag = 1
                     self.method[attribute](asset_ID, \
                             self.config[asset_ID]['pollutant'], \
                             self.config[asset_ID]['parameters'], self.flag)
+    
+    def updateCSTRWQState(self, index):
+        nodes = Nodes(self.sim)
 
+        for asset_ID, asset_info in self.config.items():
+            for node in nodes:
+                attribute =self.config[asset_ID]['method']
+                
+                if node.nodeid == asset_ID:
+                    self.flag = 0
+                    self.method[attribute](index, asset_ID, \
+                            self.config[asset_ID]['pollutant'], \
+                            self.config[asset_ID]['parameters'], self.flag)
 
-    def _EventMeanConc(self, ID, pollutant_ID, dictionary, flag):
+    def _EventMeanConc(self, ID, pollutant_ID, parameters, flag):
         """
         Event Mean Concentration Treatment (SWMM Water Quality Manual, 2016)
         Treatment results in a constant concentration.
@@ -85,8 +101,6 @@ class waterQuality:
         Treatment method parameters required:
         C = constant treatment concentration for each pollutant (SI or US: mg/L)
         """
-        
-        parameters = dictionary
 
         # Set concentration
         if self.flag == 0:
@@ -95,15 +109,13 @@ class waterQuality:
             self.sim._model.setLinkPollutant(ID, pollutant_ID, parameters["C"])
 
 
-    def _ConstantRemoval(self, ID, pollutant_ID, dictionary, flag):
+    def _ConstantRemoval(self, ID, pollutant_ID, parameters, flag):
         """
         CONSTANT REMOVAL TREATMENT (SWMM Water Quality Manual, 2016)
         Treatment results in a constant percent removal.
         
         R = pollutant removal fraction (unitless)
         """
-
-        parameters = dictionary
 
         if self.flag == 0:
             # Get SWMM parameter
@@ -121,7 +133,7 @@ class waterQuality:
             self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-    def _CoRemoval(self, ID, pollutant_ID, dictionary, flag):
+    def _CoRemoval(self, ID, pollutant_ID, parameters, flag):
         """
         CO-REMOVAL TREATMENT (SWMM Water Quality Manual, 2016)
         Removal of some pollutant is proportional to the removal of
@@ -130,8 +142,6 @@ class waterQuality:
         R1 = pollutant removal fraction (unitless) 
         R2 = pollutant removal fraction for other pollutant (unitless)
         """
-
-        parameters = dictionary
 
         if self.flag == 0:
             # Get SWMM parameter
@@ -144,12 +154,12 @@ class waterQuality:
             #Get SWMM parameter
             Cin = self.sim._model.getLinkC2(ID, pollutant_ID)
             # Calculate new concentration
-            Cnew = (1-R1*R2)*Cin
+            Cnew = (1-parameters["R1"]*parameters["R2"])*Cin
             # Set new concentration
-            self.sim._model.setLinkPollutant(link, pollutant, Cnew)
+            self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-    def _ConcDependRemoval(self, ID, pollutant_ID, dictionary, flag):
+    def _ConcDependRemoval(self, ID, pollutant_ID, parameters, flag):
         """
         CONCENTRATION-DEPENDENT REMOVAL (SWMM Water Quality Manual, 2016)
         When higher pollutant removal efficiencies occur with higher 
@@ -160,7 +170,7 @@ class waterQuality:
         R_u = upper removal rate (unitless)
         """
 
-        parameters = dictionary
+        parameters = parameters
 
         if self.flag == 0:
             # Get SWMM parameter
@@ -170,7 +180,7 @@ class waterQuality:
             *parameters["R_l"]+np.heaviside((Cin\
             -parameters["BC"]),0)*parameters["R_u"]
             # Calculate new concentration
-            Cnew = (1-parameters["R"])*Cin
+            Cnew = (1-R)*Cin
             # Set new concentration
             self.sim._model.setNodePollutant(ID, pollutant_ID, Cnew)
         else:
@@ -186,7 +196,7 @@ class waterQuality:
             self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-    def _NthOrderReaction(self, ID, pollutant_ID, dictionary, flag):
+    def _NthOrderReaction(self, ID, pollutant_ID, parameters, flag):
             """
             NTH ORDER REACTION KINETICS (SWMM Water Quality Manual, 2016)
             When treatment of pollutant X exhibits n-th order reaciton kinetics
@@ -196,7 +206,7 @@ class waterQuality:
             n   = reaction order (first order, second order, etc.) (unitless)
             """
 
-            parameters = dictionary
+            parameters = parameters
 
             # Get current time
             current_step = self.sim.current_time
@@ -221,7 +231,7 @@ class waterQuality:
                 self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-    def _kCModel(self, ID, pollutant_ID, dictionary, flag):
+    def _kCModel(self, ID, pollutant_ID, parameters, flag):
         """
         K-C_STAR MODEL (SWMM Water Quality Manual, 2016)
         The first-order model with bachground concnetration made popular by 
@@ -231,7 +241,7 @@ class waterQuality:
         C_s = constant residual concentration that always remains (SI or US: mg/L)
         """
 
-        parameters = dictionary
+        parameters = parameters
 
         if self.flag == 0:
             # Get SWMM parameters
@@ -252,7 +262,7 @@ class waterQuality:
             print("kCModel does not work for links.")
 
 
-    def _GravitySettling(self, ID, pollutant_ID, dictionary, flag):
+    def _GravitySettling(self, ID, pollutant_ID, parameters, flag):
         """
         GRAVITY SETTLING (SWMM Water Quality Manual, 2016)
         During a quiescent period of time within a storage volume, a fraction
@@ -262,7 +272,7 @@ class waterQuality:
         C_s = constant residual concentration that always remains (SI or US: mg/L)
         """
 
-        parameters = dictionary
+        parameters = parameters
 
         # Get current time
         current_step = self.sim.current_time
@@ -302,7 +312,7 @@ class waterQuality:
             self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
 
 
-    def _Erosion(self, ID, pollutant_ID, dictionary, flag): 
+    def _Erosion(self, ID, pollutant_ID, parameters, flag): 
         """
         ENGELUND-HANSEN EROSION (1967)
         Engelund and Hansen (1967) developed a procedure for predicting stage-
@@ -317,7 +327,7 @@ class waterQuality:
         Qt  = sediment discharge (SI: kg/s, US: lb/s)
         """
 
-        parameters = dictionary
+        parameters = parameters
 
         # Get current time
         current_step = self.sim.current_time
@@ -392,7 +402,7 @@ class waterQuality:
         return dCdt
 
 
-    def _CSTRSolver(self, index, ID, pollutant_ID, dictionary, flag):
+    def _CSTRSolver(self, index, ID, pollutant_ID, parameters, flag):
         """
         UNSTEADY CONTINUOUSLY STIRRED TANK REACTOR (CSTR) SOLVER
         CSTR is a common model for a chemical reactor. The behavior of a CSTR
@@ -407,8 +417,6 @@ class waterQuality:
         n   = reaction order (first order, second order, etc.) (unitless)
         c0  = intital concentration inside reactor (SI or US: mg/L)
         """
-
-        parameters = dictionary
 
         # Get current time
         current_step = self.sim.current_time

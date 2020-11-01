@@ -75,7 +75,7 @@ def test_EventMeanConc_load():
 
 # Constant Removal
 def test_ConstantRemoval_conc():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 5.0}}}
+    dict1 = {'Tank': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
     conc = []
     con = []
     with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
@@ -95,7 +95,7 @@ def test_ConstantRemoval_conc():
     assert error <= 0.03
 
 def test_ConstantRemoval_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 5.0}}}
+    dict1 = {'Tank': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
     conc = []
     conc1 = []
     flow = []
@@ -125,8 +125,8 @@ def test_ConstantRemoval_load():
 
 # CoRemoval
 def test_CoRemoval_conc():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}},\
-            'Tank': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}}}
+    dict1 = {'Tank': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
+        'Tank': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
     conc_P1 = []
     con_P1 = []
     with Simulation("./tests/inps/tank_variableinflow_notreatment2.inp") as sim:
@@ -146,8 +146,8 @@ def test_CoRemoval_conc():
     assert error <= 0.03
 
 def test_CoRemoval_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}},\
-            'Tank': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}}}
+    dict1 = {'Tank': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
+        'Tank': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
     conc = []
     conc1 = []
     flow = []
@@ -374,9 +374,9 @@ def test_GravitySettling_load():
     print(error)
     assert error <= 0.03
 
-"""
+
 def test_CSTR_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 0.0}}}
+    dict1 = {'Tank': {'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -386,7 +386,7 @@ def test_CSTR_load():
         Tank = Nodes(sim)["Tank"]
         Valve = Links(sim)["Valve"]
         for index,step in enumerate(sim):
-            CS.CSTR_solver(index)
+            CS.updateCSTRWQState(index)
             c = Tank.pollut_quality
             conc.append(c['P1'])
             c1 = Valve.pollut_quality
@@ -402,18 +402,24 @@ def test_CSTR_load():
     assert error <= 0.03
 
 def test_CSTR_steadystate():
-    dict1 = {'Tank': {0: [-0.2, 1.0, 0.0]}}
-    conc = []
+    dict1 = {'Tank': {'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
+    conc2 = []
+    vol = []
+    flow = []
+    with Simulation("./tests/inps/tank_constantinflow_notreatment.inp") as sim:
+        Tank = Nodes(sim)["Tank"]
+        for index,step in enumerate(sim):
+            v = Tank.volume
+            vol.append(v)
+            q = Tank.total_inflow
+            flow.append(q)
     with Simulation("./tests/inps/tank_constantinflow_notreatment.inp") as sim:
         CS = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for index,step in enumerate(sim):
-            CS.CSTR_solver(index)
+            CS.updateCSTRWQState(index)
             c = Tank.pollut_quality
-            conc.append(c['P1'])
-    C_steadystate = 10.0/(1 + (0.2/(5/127)))
-    print(C_steadystate)
-    error = (C_steadystate - conc[-1])/C_steadystate
-    print(error)
+            conc2.append(c['P1'])
+    C_steadystate = dict1['Tank']['parameters']['c0'] /((1 - (dict1['Tank']['parameters']['k']*(np.mean(vol)/np.mean(flow))))**dict1['Tank']['parameters']['n'])
+    error = (C_steadystate - conc2[-1])/C_steadystate
     assert error <= 0.03
-"""

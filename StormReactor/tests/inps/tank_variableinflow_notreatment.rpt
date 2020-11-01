@@ -87,13 +87,13 @@
   Groundwater Inflow .......         0.000
   RDII Inflow ..............         0.000
   External Inflow ..........         0.000
-  External Outflow .........        83.478
+  External Outflow .........        83.488
   Flooding Loss ............         0.000
   Exfiltration Loss ........         0.000
-  Mass Reacted .............         0.000
+  Mass Reacted .............         0.139
   Initial Stored Mass ......         0.000
   Final Stored Mass ........         0.000
-  Continuity Error (%) .....        -0.187
+  Continuity Error (%) .....        -0.367
   
   
   ***************************
@@ -206,9 +206,9 @@
                          Freq      Flow      Flow      Volume            P1
   Outfall Node           Pcnt       CMS       CMS    10^6 ltr            kg
   -------------------------------------------------------------------------
-  Outfall               68.34     1.778     2.778      35.000        83.478
+  Outfall               68.34     1.778     2.778      35.000        83.488
   -------------------------------------------------------------------------
-  System                68.34     1.778     2.778      35.000        83.478
+  System                68.34     1.778     2.778      35.000        83.488
   
   
   ********************
@@ -249,9 +249,9 @@
                                   P1
   Link                            kg
   ----------------------------------
-  Valve                       83.478
+  Valve                       83.488
   
 
-  Analysis begun on:  Fri Oct 30 15:25:21 2020
-  Analysis ended on:  Fri Oct 30 15:25:21 2020
-  Total elapsed time: < 1 sec
+  Analysis begun on:  Sun Nov  1 18:02:50 2020
+  Analysis ended on:  Sun Nov  1 18:02:53 2020
+  Total elapsed time: 00:00:03

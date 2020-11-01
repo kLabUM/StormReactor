@@ -47,7 +47,7 @@ def test_EventMeanConc_load():
 
 # Constant Removal
 def test_ConstantRemoval_load():
-    dict1 = {'Culvert': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 5.0}}}
+    dict1 = {'Culvert': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
     conc = []
     conc1 = []
     flow = []
@@ -75,8 +75,9 @@ def test_ConstantRemoval_load():
 
 # CoRemoval
 def test_CoRemoval_load():
-    dict1 = {'Culvert': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}},\
-            'Culvert': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}}}
+    dict1 = {'Culvert': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
+        'Culvert': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}},
+        }
     conc = []
     conc1 = []
     flow = []

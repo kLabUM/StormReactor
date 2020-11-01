@@ -31,9 +31,9 @@ Modified SWMM: https://github.com/bemason/SWMM_BM
 
 Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
-### Simple Example 
+### Example 1
 
-Here is a simple example on how to use *StormReactor* for modeling a variety of water quality methods (e.g., gravity settling, CSTR, erosion) for two pollutants (e.g., TSS, nitrate) in several stormwater assets (e.g., basin, wetland, channel).
+Here is a simple example on how to use *StormReactor* for modeling a variety of water quality methods (e.g., gravity settling, erosion) for a pollutant (e.g., TSS) in several stormwater assets (e.g., basin, channel). This example covers all existing pollutant treatment and generation methods in *StormReactor* except a completely stirred tank reactor (CSTR). Please see the next example for modeling a CSTR.
 
 ```python 
 # import packages
@@ -42,18 +42,41 @@ from pyswmm import Simulation
 
 # build water quality configuration dictionary
 config = {'detention_basin': { 'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}},\
-			'wetland': { 'pollutant': 1, 'method': 'CSTR', 'parameters': {'k': -0.000089, 'n': 1.0, 'Co': 0.0}},\
 			'channel': { 'pollutant': 0, 'method': 'Erosion', 'parameters': {'w': 10.0, 'So': 0.037, 'Ss': 1.6, 'd50': 0.04}},\
 					{ 'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}}}
 
 
 # initialize water quality
-with Simulation('example.inp') as sim:
+with Simulation('example1.inp') as sim:
 	WQ = waterQuality(sim, config)
 
 	for step in sim:
 		# update each time step
 		WQ.updateWQState()
+
+```
+
+### Example 2
+
+If you want to model a CSTR, here is a simple example for modelling a CSTR for a pollutant (e.g., nitrate) in several stormwater assets (e.g., basin, wetland). Note you must call 'updateCSTRWQState(index)' instead of 'updateWQState()' because the CSTR code requires the additonal input of 'index'. This is the only difference for modeling a CSTR.
+
+```python 
+# import packages
+import StormReactor
+from pyswmm import Simulation
+
+# build water quality configuration dictionary
+config = {'detention_basin': { 'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.0005, 'n': 1.0, 'Co': 10.0}},\
+			'wetland': { 'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.000089, 'n': 3.0, 'Co': 10.0}}}
+
+
+# initialize water quality
+with Simulation('example2.inp') as sim:
+	WQ = waterQuality(sim, config)
+
+	for step in sim:
+		# update each time step
+		WQ.updateCSTRWQState(index)
 
 ```
 
