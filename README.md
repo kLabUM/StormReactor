@@ -58,7 +58,7 @@ with Simulation('example1.inp') as sim:
 
 ### Example 2
 
-Here is a simple example for modeling a CSTR for a pollutant (e.g., nitrate) in several stormwater assets (e.g., basin, wetland). Note you must call <updateWQState_CSTR(index)> instead of <updateWQState()> because the CSTR code requires the additonal input of <index>. This is the only difference for modeling a CSTR.
+Here is a simple example for modeling a CSTR for a pollutant (e.g., nitrate) in several stormwater assets (e.g., basin, wetland). Note you must call '<updateWQState_CSTR(index)>' instead of '<updateWQState()>' because the CSTR code requires the additonal input of '<index>'. This is the only difference for modeling a CSTR.
 
 ```python 
 # import packages
