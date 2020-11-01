@@ -3,7 +3,7 @@
 
 ## Overview 
 
-*StormReactor* was developed to expand the ability to model stormwater quality and water quality based real-time control in EPA's Stormwater Management Model (SWMM). It is a natural extension of *[Open-Storm]*'s(http://open-storm.org/) mission to open up and ease access into the technical world of smart stormwater systems. *StormReactor* enables users to model any stormwater pollutant treatment or generation method in any node or link in a stormwater network. A user can implement any SWMM treatment function defined in the *SWMM Reference Manual Volume III: Water Quality* or create their own.   
+*StormReactor* was developed to expand the ability to model stormwater quality and water quality based real-time control in EPA's Stormwater Management Model (SWMM). It is a natural extension of *Open-Storm*'s(http://open-storm.org/) mission to open up and ease access into the technical world of smart stormwater systems. *StormReactor* enables users to model any stormwater pollutant treatment or generation method in any node or link in a stormwater network. A user can implement any SWMM treatment function defined in the *SWMM Reference Manual Volume III: Water Quality* or create their own.   
 
 
 ## Getting Started 
@@ -58,7 +58,7 @@ with Simulation('example1.inp') as sim:
 
 ### Example 2
 
-If you want to model a CSTR, here is a simple example for modelling a CSTR for a pollutant (e.g., nitrate) in several stormwater assets (e.g., basin, wetland). Note you must call 'updateCSTRWQState(index)' instead of 'updateWQState()' because the CSTR code requires the additonal input of 'index'. This is the only difference for modeling a CSTR.
+Here is a simple example for modeling a CSTR for a pollutant (e.g., nitrate) in several stormwater assets (e.g., basin, wetland). Note you must call <updateWQState_CSTR(index)> instead of <updateWQState()> because the CSTR code requires the additonal input of <index>. This is the only difference for modeling a CSTR.
 
 ```python 
 # import packages
@@ -76,7 +76,7 @@ with Simulation('example2.inp') as sim:
 
 	for step in sim:
 		# update each time step
-		WQ.updateCSTRWQState(index)
+		WQ.updateWQState_CSTR(index)
 
 ```
 
