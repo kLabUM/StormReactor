@@ -26,7 +26,12 @@ class waterQuality:
     Methods
     _______
     updateWQState
-        Updates the pollutant concentration during a SWMM simulation.
+        Updates the pollutant concentration during a SWMM simulation for
+        all methods except CSTR.
+
+    updateCSTRWQState
+        Updates the pollutant concentration during a SWMM simulation for
+        a CSTR.
     """
     
     # Initialize class
@@ -54,10 +59,10 @@ class waterQuality:
 
     def updateWQState(self):
         """
-        Runs the selected water quality method (except CSTR, for CSTR 
-        run updateCSTRWQState() ) and updates the pollutant
-        concentration during a SWMM simulation.
+        Runs the selected water quality method (except CSTR) and updates
+        the pollutant concentration during a SWMM simulation.
         """
+
         nodes = Nodes(self.sim)
         links = Links(self.sim)
 
@@ -80,7 +85,13 @@ class waterQuality:
                             self.config[asset_ID]['pollutant'], \
                             self.config[asset_ID]['parameters'], self.flag)
     
-    def updateCSTRWQState(self, index):
+
+    def updateWQState_CSTR(self, index):
+        """
+        Runs the water quality method CSTR only and updates the pollutant 
+        concentration during a SWMM simulation.
+        """
+
         nodes = Nodes(self.sim)
 
         for asset_ID, asset_info in self.config.items():
@@ -92,6 +103,7 @@ class waterQuality:
                     self.method[attribute](index, asset_ID, \
                             self.config[asset_ID]['pollutant'], \
                             self.config[asset_ID]['parameters'], self.flag)
+
 
     def _EventMeanConc(self, ID, pollutant_ID, parameters, flag):
         """

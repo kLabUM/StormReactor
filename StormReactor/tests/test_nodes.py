@@ -386,7 +386,7 @@ def test_CSTR_load():
         Tank = Nodes(sim)["Tank"]
         Valve = Links(sim)["Valve"]
         for index,step in enumerate(sim):
-            CS.updateCSTRWQState(index)
+            CS.updatewQState_CSTR(index)
             c = Tank.pollut_quality
             conc.append(c['P1'])
             c1 = Valve.pollut_quality
@@ -417,7 +417,7 @@ def test_CSTR_steadystate():
         CS = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for index,step in enumerate(sim):
-            CS.updateCSTRWQState(index)
+            CS.updateWQState_CSTR(index)
             c = Tank.pollut_quality
             conc2.append(c['P1'])
     C_steadystate = dict1['Tank']['parameters']['c0'] /((1 - (dict1['Tank']['parameters']['k']*(np.mean(vol)/np.mean(flow))))**dict1['Tank']['parameters']['n'])
