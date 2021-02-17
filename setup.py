@@ -19,9 +19,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        "numpy>=1.19.0",
-        "pyswmm>=0.6.2",
-        "scipy>=1.19.3",
+        "numpy",
+        "pyswmm",
+        "scipy",
     ],
     python_requires='>=3.6',
 )

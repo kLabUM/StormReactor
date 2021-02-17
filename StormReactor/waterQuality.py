@@ -54,6 +54,7 @@ class waterQuality:
             "GravitySettling": self._GravitySettling,
             "Erosion": self._Erosion,
             "CSTR": self._CSTRSolver,
+            "Phosphorus": self._Phosphorus,
             }
 
 
@@ -111,7 +112,7 @@ class waterQuality:
         Treatment results in a constant concentration.
 
         Treatment method parameters required:
-        C = constant treatment concentration for each pollutant (SI or US: mg/L)
+        C = constant treatment concentration for each pollutant (SI/US: mg/L)
         """
 
         # Set concentration
@@ -178,7 +179,7 @@ class waterQuality:
         influent concentrations.
         
         R_l = lower removal rate (unitless)
-        BC  = boundary concentration that determines removal rate (SI or US: mg/L)
+        BC  = boundary concentration that determines removal rate (SI/US: mg/L)
         R_u = upper removal rate (unitless)
         """
 
@@ -250,7 +251,7 @@ class waterQuality:
         Kadlec and Knight (1996) for long-term treatment performance of wetlands.
         
         k   = reaction rate constant (SI: m/hr, US: ft/hr)
-        C_s = constant residual concentration that always remains (SI or US: mg/L)
+        C_s = constant residual concentration that always remains (SI/US: mg/L)
         """
 
         parameters = parameters
@@ -281,7 +282,7 @@ class waterQuality:
         of suspended particles will settle out.
 
         k   = reaction rate constant (SI: m/hr, US: ft/hr)
-        C_s = constant residual concentration that always remains (SI or US: mg/L)
+        C_s = constant residual concentration that always remains (SI/US: mg/L)
         """
 
         parameters = parameters
@@ -333,7 +334,7 @@ class waterQuality:
         w   = channel width (SI: m, US: ft)
         So  = bottom slope (SI: m/m, US: ft/ft)
         Ss  = specific gravity of sediment (for soil usually between 2.65-2.80)
-        d50 = mean sediment particle diameter (SI or US: mm)
+        d50 = mean sediment particle diameter (SI/US: mm)
         d   = depth (SI: m, US: ft)
         qt  = sediment discharge per unit width (SI: kg/m-s, US: lb/ft-s)
         Qt  = sediment discharge (SI: kg/s, US: lb/s)
@@ -425,9 +426,9 @@ class waterQuality:
         NOTE: You only need to call this method, not CSTR_tank. CSTR_tank is
         intitalized in __init__ in Node_Treatment.  
         
-        k   = reaction rate constant (SI or US: 1/s)
+        k   = reaction rate constant (SI/US: 1/s)
         n   = reaction order (first order, second order, etc.) (unitless)
-        c0  = intital concentration inside reactor (SI or US: mg/L)
+        c0  = intital concentration inside reactor (SI/US: mg/L)
         """
 
         # Get current time
@@ -457,4 +458,69 @@ class waterQuality:
             self.sim._model.setNodePollutant(ID, pollutant_ID, self.solver.y[0])
         else:
             print("CSTR does not work for links.")
+
+    def _Phosphorus(self, ID, pollutant_ID, parameters, flag):
+        """
+        LI & DAVIS BIORETENTION CELL TOTAL PHOSPHOURS MODEL (2016)
+        Li and Davis (2016) developed a dissolved and particulate phosphorus
+        model for bioretention cells.
+    
+        B1    = coefficient related to the rate at which Ceq approaches Co (SI/US: 1/s)
+        Ceq0  = initial DP or PP equilibrium concentration value for an event (SI/US: mg/L)
+        k     = reaction rate constant (SI/US: 1/s)
+        L     = depth of soil media (length of pathway) (SI: m, US: ft)
+        A     = cross-sectional area (SI: m^2, US: ft^2)
+        E     = filter bed porosity (unitless)
+        """
+
+        parameters = parameters
+        t = 0
+
+        if self.flag == 0:
+            # Get SWMM parameters
+            Cin = self.sim._model.getNodeCin(ID, pollutant_ID)
+            Qin = self.sim._model.getNodeResult(ID, 0)
+            d = self.sim._model.getNodeResult(ID, 5)
+            # Time calculations for phosphorus model
+            if Qin != 0:
+                # Get current time
+                current_step = self.sim.current_time
+                # Calculate model dt in seconds
+                dt = (current_step - self.last_timestep).total_seconds()
+                # Accumulate time elapsed since water entered node
+                t = t + dt
+                # Updating reference step
+                self.last_timestep = current_step
+                # Calculate new concentration
+                Cnew = (Cin*np.exp((-parameters["k"]*parameters["L"]\
+                    *parameters["A"]*parameters["E"])/Qin))+(parameters["Ceq0"]\
+                    *np.exp(parameters["B1"]*t))*(1-(np.exp((-parameters["k"]\
+                    *parameters["L"]*parameters["A"]*parameters["E"])/Qin)))
+                # Set new concentration
+                self.sim._model.setNodePollutant(ID, pollutant_ID, Cnew)
+            else:
+                t = 0
+        else:
+            C = self.sim._model.getLinkC2(ID, pollutant_ID)
+            Q = self.sim._model.getLinkResult(ID, 0)
+            d = self.sim._model.getLinkResult(ID, 1)
+            # Time calculations for phosphorus model
+            if Q != 0:
+                # Get current time
+                current_step = self.sim.current_time
+                # Calculate model dt in seconds
+                dt = (current_step - self.last_timestep).total_seconds()
+                # Accumulate time elapsed since water entered link
+                t = t + dt
+                # Updating reference step
+                self.last_timestep = current_step
+                # Calculate new concentration
+                Cnew = (C*np.exp((-parameters["k"]*parameters["L"]\
+                    *parameters["A"]*parameters["E"])/Q))+(parameters["Ceq0"]\
+                    *np.exp(parameters["B1"]*t))*(1-(np.exp((-parameters["k"]\
+                    *parameters["L"]*parameters["A"]*parameters["E"])/Q)))
+                # Set new concentration
+                self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
+            else:
+                t = 0
 

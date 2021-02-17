@@ -386,7 +386,7 @@ def test_CSTR_load():
         Tank = Nodes(sim)["Tank"]
         Valve = Links(sim)["Valve"]
         for index,step in enumerate(sim):
-            CS.updatewQState_CSTR(index)
+            CS.updateWQState_CSTR(index)
             c = Tank.pollut_quality
             conc.append(c['P1'])
             c1 = Valve.pollut_quality
@@ -422,4 +422,32 @@ def test_CSTR_steadystate():
             conc2.append(c['P1'])
     C_steadystate = dict1['Tank']['parameters']['c0'] /((1 - (dict1['Tank']['parameters']['k']*(np.mean(vol)/np.mean(flow))))**dict1['Tank']['parameters']['n'])
     error = (C_steadystate - conc2[-1])/C_steadystate
+    assert error <= 0.03
+
+def test_Phosphorus_load():
+    dict1 = {'Tank': {'pollutant': 0, 'method': 'Phosphorus', 'parameters': {'B1': 0.0000333, 'Ceq0': 0.0081, 'k': 0.00320, 'L': 0.91, 'A': 100,'E': 0.44}}}
+    conc = []
+    conc1 = []
+    flow = []
+    flow1 = []
+    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
+        GS = waterQuality(sim, dict1)
+        Outfall = Nodes(sim)["Outfall"]
+        for step in sim:
+            GS.updateWQState()
+            c = Outfall.pollut_quality
+            conc.append(c['P1'])
+            flow.append(sim._model.getNodeResult("Outfall",0))
+        load = [a*b for a,b in zip(conc,flow)]
+        cum_load = np.cumsum(load)
+    with Simulation("./tests/inps/tank_variableinflow_gravsettling.inp") as sim:
+        Outfall = Nodes(sim)["Outfall"]
+        for step in sim:
+            c = Outfall.pollut_quality
+            conc1.append(c['P1'])
+            flow1.append(sim._model.getNodeResult("Outfall",0))
+        load1 = [a*b for a,b in zip(conc1,flow1)]
+        cum_load1 = np.cumsum(load1)    
+    error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
+    print(error)
     assert error <= 0.03
