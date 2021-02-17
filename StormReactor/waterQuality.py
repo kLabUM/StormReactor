@@ -480,9 +480,8 @@ class waterQuality:
             # Get SWMM parameters
             Cin = self.sim._model.getNodeCin(ID, pollutant_ID)
             Qin = self.sim._model.getNodeResult(ID, 0)
-            d = self.sim._model.getNodeResult(ID, 5)
             # Time calculations for phosphorus model
-            if Qin != 0:
+            if Qin >= 0.01:
                 # Get current time
                 current_step = self.sim.current_time
                 # Calculate model dt in seconds
@@ -503,9 +502,8 @@ class waterQuality:
         else:
             C = self.sim._model.getLinkC2(ID, pollutant_ID)
             Q = self.sim._model.getLinkResult(ID, 0)
-            d = self.sim._model.getLinkResult(ID, 1)
             # Time calculations for phosphorus model
-            if Q != 0:
+            if Q >= 0.01:
                 # Get current time
                 current_step = self.sim.current_time
                 # Calculate model dt in seconds
