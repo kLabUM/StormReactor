@@ -2,7 +2,7 @@ from pyswmm import Simulation, Nodes, Links
 import numpy as np
 from scipy.integrate import ode 
 
-class waterQuality:
+class WaterQuality:
     """Water quality module for SWMM
 
     This class provides all the necessary code to run StormReactor's

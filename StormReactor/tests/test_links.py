@@ -1,4 +1,4 @@
-from StormReactor import waterQuality
+from StormReactor import WaterQuality
 from pyswmm import Simulation, Nodes, Links
 import numpy as np
 from sklearn.metrics import mean_squared_error as mse
@@ -25,7 +25,7 @@ def test_EventMeanConc_load():
     flow = []
     flow1 = []
     with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
-        EMC = waterQuality(sim, dict1)
+        EMC = WaterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
         for step in sim:
@@ -53,7 +53,7 @@ def test_ConstantRemoval_load():
     flow = []
     flow1 = []
     with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
-        CR = waterQuality(sim, dict1)
+        CR = WaterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
         for step in sim:
@@ -83,7 +83,7 @@ def test_CoRemoval_load():
     flow = []
     flow1 = []
     with Simulation("./tests/inps/LinkTest_variableinflow2.inp") as sim:
-        CR = waterQuality(sim, dict1)
+        CR = WaterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
         for step in sim:
@@ -111,7 +111,7 @@ def test_ConcDependRemoval_load():
     flow = []
     flow1 = []
     with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
-        CDR = waterQuality(sim, dict1)
+        CDR = WaterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
         for step in sim:
@@ -139,7 +139,7 @@ def test_NthOrderReaction_load():
     flow = []
     flow1 = []
     with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
-        NOR = waterQuality(sim, dict1)
+        NOR = WaterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
         for step in sim:
@@ -167,7 +167,7 @@ def test_GravitySettling_load():
     flow = []
     flow1 = []
     with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
-        GS = waterQuality(sim, dict1)
+        GS = WaterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
         for step in sim:
@@ -195,7 +195,7 @@ def test_Erosion_load():
     flow = []
     flow1 = []
     with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
-        ER = waterQuality(sim, dict1)
+        ER = WaterQuality(sim, dict1)
         channel = Links(sim)["Channel"]
         tailwater = Nodes(sim)["TailWater"]
         for step in sim:
@@ -222,7 +222,7 @@ def test_Phosphorus_load():
     flow = []
     flow1 = []
     with Simulation("./tests/inps/LinkTest_variableinflow.inp") as sim:
-        GS = waterQuality(sim, dict1)
+        GS = WaterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
         for step in sim:
