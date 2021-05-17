@@ -17,7 +17,7 @@
 - pyswmm
 - scipy
 
-We are waiting on the SWMM pull request to be accepted. You can find our pull request here: https://github.com/OpenWaterAnalytics/Stormwater-Management-Model/pull/302. The issue has also been raised on the PySWMM repository here: https://github.com/OpenWaterAnalytics/pyswmm/issues/230. Once the pull request has been approved for SWMM, a similar PySWMM pull request will be initiated. Then, the final version of StormReactor will be available 
+We are waiting on the SWMM pull request to be accepted. You can find our pull request here: https://github.com/OpenWaterAnalytics/Stormwater-Management-Model/pull/326. The issue has also been raised on the PySWMM repository here: https://github.com/OpenWaterAnalytics/pyswmm/issues/230. Once the pull request has been approved for SWMM, a similar PySWMM pull request will be initiated. Then, the final version of StormReactor will be available 
 through PyPI at https://pypi.python.org/pypi/StormReactor/.
 
 ```bash 
