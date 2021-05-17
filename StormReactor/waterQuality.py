@@ -212,7 +212,7 @@ class waterQuality:
     def _NthOrderReaction(self, ID, pollutant_ID, parameters, flag):
             """
             NTH ORDER REACTION KINETICS (SWMM Water Quality Manual, 2016)
-            When treatment of pollutant X exhibits n-th order reaciton kinetics
+            When treatment of pollutant X exhibits n-th order reaction kinetics
             where the instantaneous reaction rate is kC^n.
             
             k   = reaction rate constant (SI: m/hr, US: ft/hr)
@@ -247,7 +247,7 @@ class waterQuality:
     def _kCModel(self, ID, pollutant_ID, parameters, flag):
         """
         K-C_STAR MODEL (SWMM Water Quality Manual, 2016)
-        The first-order model with bachground concnetration made popular by 
+        The first-order model with background concentration made popular by 
         Kadlec and Knight (1996) for long-term treatment performance of wetlands.
         
         k   = reaction rate constant (SI: m/hr, US: ft/hr)
