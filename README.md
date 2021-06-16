@@ -48,7 +48,7 @@ config = {'detention_basin': { 'pollutant': 0, 'method': 'GravitySettling', 'par
 
 # initialize water quality
 with Simulation('example1.inp') as sim:
-	WQ = waterQuality(sim, config)
+	WQ = WaterQuality(sim, config)
 
 	for step in sim:
 		# update each time step
@@ -72,7 +72,7 @@ config = {'detention_basin': { 'pollutant': 0, 'method': 'CSTR', 'parameters': {
 
 # initialize water quality
 with Simulation('example2.inp') as sim:
-	WQ = waterQuality(sim, config)
+	WQ = WaterQuality(sim, config)
 
 	for step in sim:
 		# update each time step
