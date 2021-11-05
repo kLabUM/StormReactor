@@ -1,4 +1,5 @@
 from pyswmm import Simulation, Nodes, Links
+from pyswmm.toolkitapi import NodeResults
 import numpy as np
 from scipy.integrate import ode
 
@@ -278,7 +279,7 @@ class WaterQuality:
         if self.flag == 0:
             # Get SWMM parameters
             Cin = self.sim._model.getNodeCin(ID, pollutantID)
-            d = self.sim._model.getNodeResult(ID, 5)
+            d = self.sim._model.getNodeResult(ID, NodeResults.newDepth)
             hrt = self.sim._model.getNodeHRT(ID)
             # Calculate removal
             if d != 0.0 and Cin != 0.0:
@@ -318,8 +319,8 @@ class WaterQuality:
         if self.flag == 0:
             # Get SWMM parameters
             Cin = self.sim._model.getNodeCin(ID, pollutantID)
-            Qin = self.sim._model.getNodeResult(ID, 0)
-            d = self.sim._model.getNodeResult(ID, 5)
+            Qin = self.sim._model.getNodeResult(ID, NodeResults.totalinflow)
+            d = self.sim._model.getNodeResult(ID, NodeResults.newDepth)
             if d != 0.0:
                 # Calculate new concentration
                 Cnew = np.heaviside((0.1-Qin), 0)*(parameters["C_s"]\
@@ -468,10 +469,10 @@ class WaterQuality:
 
         if self.flag == 0:
             # Get parameters
-            Qin = self.sim._model.getNodeResult(ID, 0)
+            Qin = self.sim._model.getNodeResult(ID, NodeResults.totalinflow)
             Cin = self.sim._model.getNodeCin(ID, pollutantID)
-            Qout = self.sim._model.getNodeResult(ID, 1)
-            V = self.sim._model.getNodeResult(ID, 3)
+            Qout = self.sim._model.getNodeResult(ID, NodeResults.outflow)
+            V = self.sim._model.getNodeResult(ID, NodeResults.newVolume)
 
             # Parameterize solver
             self.solver.set_f_params(Qin, Cin, Qout, V, parameters["k"], parameters["n"])
@@ -512,7 +513,7 @@ class WaterQuality:
         if self.flag == 0:
             # Get SWMM parameters
             Cin = self.sim._model.getNodeCin(ID, pollutantID)
-            Qin = self.sim._model.getNodeResult(ID, 0)
+            Qin = self.sim._model.getNodeResult(ID, NodeResults.totalinflow)
             # Time calculations for phosphorus model
             if Qin >= 0.01:
                 # Get current time
