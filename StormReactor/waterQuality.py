@@ -1,5 +1,5 @@
 from pyswmm import Simulation, Nodes, Links
-from pyswmm.toolkitapi import NodeResults
+from pyswmm.toolkitapi import NodeResults, LinkResults
 import numpy as np
 from scipy.integrate import ode
 
@@ -333,8 +333,8 @@ class WaterQuality:
             self.sim._model.setNodePollutant(ID, pollutantID, Cnew)
         else:
             C = self.sim._model.getLinkC2(ID, pollutantID)
-            Q = self.sim._model.getLinkResult(ID, 0)
-            d = self.sim._model.getLinkResult(ID, 1)
+            Q = self.sim._model.getLinkResult(ID, LinkResults.newFlow)
+            d = self.sim._model.getLinkResult(ID, LinkResults.newDepth)
             if d != 0.0:
                 # Calculate new concentration
                 Cnew = np.heaviside((0.1-Q), 0)*(parameters["C_s"]\
@@ -380,8 +380,8 @@ class WaterQuality:
         else:
             # Get SWMM parameters
             Cin = self.sim._model.getLinkC2(ID, pollutantID)
-            Q = self.sim._model.getLinkResult(ID, 0)
-            d = self.sim._model.getLinkResult(ID, 1)
+            Q = self.sim._model.getLinkResult(ID, LinkResults.newFlow)
+            d = self.sim._model.getLinkResult(ID, LinkResults.newDepth)
             v = self.sim._model.getConduitVelocity(ID)
             
             # Erosion calculations for US units
@@ -535,7 +535,7 @@ class WaterQuality:
                 t = 0
         else:
             C = self.sim._model.getLinkC2(ID, pollutantID)
-            Q = self.sim._model.getLinkResult(ID, 0)
+            Q = self.sim._model.getLinkResult(ID, LinkResults.newFlow)
             # Time calculations for phosphorus model
             if Q >= 0.01:
                 # Get current time
