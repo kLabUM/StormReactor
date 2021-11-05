@@ -1,6 +1,6 @@
 from pyswmm import Simulation, Nodes, Links
 import numpy as np
-from scipy.integrate import ode 
+from scipy.integrate import ode
 
 class WaterQuality:
     """Water quality module for SWMM
@@ -106,6 +106,14 @@ class WaterQuality:
                             self.config[asset_ID]['parameters'], self.flag)
 
 
+    def _generateErrorMessage(self, param, paramFullName, condition, minVal=0, maxVal=0):
+        if (condition == 0):
+            return "{} (\"{}\") should be equal or larger than {}!".format(paramFullName, param, minVal)
+        elif (condition == 1):
+            return "{} (\"{}\") should be equal or smaller than {}!".format(paramFullName, param, maxVal)
+        elif (condition == 2):
+            return "{} (\"{}\") should range from {} to {}!".format(paramFullName, param, minVal, maxVal)
+
     def _EventMeanConc(self, ID, pollutantID, parameters, flag):
         """
         Event Mean Concentration Treatment (SWMM Water Quality Manual, 2016)
@@ -129,6 +137,8 @@ class WaterQuality:
         
         R = pollutant removal fraction (unitless)
         """
+
+        assert(0 <= parameters["R"] <= 1, self._generateErrorMessage("R", "Pollutant removal fraction", 2, minVal=0, maxVal=1))
 
         if self.flag == 0:
             # Get SWMM parameter
@@ -156,6 +166,9 @@ class WaterQuality:
         R2 = pollutant removal fraction for other pollutant (unitless)
         """
 
+        assert(0 <= parameters["R1"] <= 1, self._generateErrorMessage("R1", "Pollutant removal fraction", 2, minVal=0, maxVal=1))
+        assert(0 <= parameters["R2"] <= 1, self._generateErrorMessage("R2", "Pollutant removal fraction for other pollutant", 2, minVal=0, maxVal=1))
+
         if self.flag == 0:
             # Get SWMM parameter
             Cin = self.sim._model.getNodeCin(ID, pollutantID)
@@ -182,6 +195,8 @@ class WaterQuality:
         BC  = boundary concentration that determines removal rate (SI/US: mg/L)
         R_u = upper removal rate (unitless)
         """
+
+        assert(parameters["BC"]>=0, self._generateErrorMessage("BC", "Boundary concentration", 0, minVal=0))
 
         parameters = parameters
 
@@ -219,6 +234,8 @@ class WaterQuality:
             n   = reaction order (first order, second order, etc.) (unitless)
             """
 
+            assert(parameters["n"]>=0, self._generateErrorMessage("n", "Reaction order", 0, minVal=0))
+
             parameters = parameters
 
             # Get current time
@@ -254,6 +271,8 @@ class WaterQuality:
         C_s = constant residual concentration that always remains (SI/US: mg/L)
         """
 
+        assert(parameters["C_s"] >= 0, self._generateErrorMessage("C_s", "Constant residual concentration", 0, minVal=0))
+
         parameters = parameters
 
         if self.flag == 0:
@@ -284,6 +303,8 @@ class WaterQuality:
         k   = reaction rate constant (SI: m/hr, US: ft/hr)
         C_s = constant residual concentration that always remains (SI/US: mg/L)
         """
+
+        assert(parameters["C_s"] >= 0, self._generateErrorMessage("C_s", "Constant residual concentration", 0, minVal=0))
 
         parameters = parameters
 
@@ -339,6 +360,10 @@ class WaterQuality:
         qt  = sediment discharge per unit width (SI: kg/m-s, US: lb/ft-s)
         Qt  = sediment discharge (SI: kg/s, US: lb/s)
         """
+
+        assert(parameters["w"] >=0, self._generateErrorMessage("w", "Channel width", 0, minVal=0))
+        assert(parameters["Ss"] >=0, self._generateErrorMessage("Ss", "Specific gravity of sediment", 0, minVal=0))
+        assert(parameters["d50"] >=0, self._generateErrorMessage("d50", "Mean sediment particle diameter", 0, minVal=0))
 
         parameters = parameters
 
@@ -431,6 +456,9 @@ class WaterQuality:
         c0  = intital concentration inside reactor (SI/US: mg/L)
         """
 
+        assert(parameters["n"] >=0, self._generateErrorMessage("n", "Reaction order", 0, minVal=0))
+        assert(parameters["c0"] >=0, self._generateErrorMessage("c0", "Intital concentration inside reactor", 0, minVal=0))
+
         # Get current time
         current_step = self.sim.current_time
         # Calculate model dt in seconds
@@ -472,6 +500,11 @@ class WaterQuality:
         A     = cross-sectional area (SI: m^2, US: ft^2)
         E     = filter bed porosity (unitless)
         """
+
+        assert(parameters["Ceq0"] >=0, self._generateErrorMessage("Ceq0", "Initial DP or PP equilibrium concentration value for an event", 0, minVal=0))
+        assert(parameters["L"] >=0, self._generateErrorMessage("L", "Depth of soil media", 0, minVal=0))
+        assert(parameters["A"] >=0, self._generateErrorMessage("A", "Cross-sectional area", 0, minVal=0))
+        assert(0<= parameters["E"] <=1, self._generateErrorMessage("E", "Filter bed porosity", 2, minVal=0, maxVal=1))
 
         parameters = parameters
         t = 0
