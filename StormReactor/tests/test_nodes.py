@@ -1,4 +1,4 @@
-from StormReactor import WaterQuality
+from StormReactor import waterQuality
 from pyswmm import Simulation, Nodes, Links
 import numpy as np
 from sklearn.metrics import mean_squared_error as mse
@@ -25,17 +25,17 @@ concentration is equal to the closed form steady state CSTR equation.
 # SWMM WATER QUALITY METHODS
 # Event Mean Concentration
 def test_EventMeanConc_conc():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
     conc = []
     con = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        EMC = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        EMC = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             EMC.updateWQState()
             c = Tank.pollut_quality
             conc.append(c['P1'])
-    with Simulation("./tests/inps/tank_variableinflow_emc.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_emc.inp") as sim:
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             co = Tank.pollut_quality
@@ -45,13 +45,13 @@ def test_EventMeanConc_conc():
     assert error <= 0.03
 
 def test_EventMeanConc_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        EMC = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        EMC = waterQuality(sim, dict1)
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             EMC.updateWQState()
@@ -60,7 +60,7 @@ def test_EventMeanConc_load():
             flow.append(sim._model.getNodeResult("Outfall",0))
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
-    with Simulation("./tests/inps/tank_variableinflow_emc.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_emc.inp") as sim:
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             c = Outfall.pollut_quality
@@ -75,17 +75,17 @@ def test_EventMeanConc_load():
 
 # Constant Removal
 def test_ConstantRemoval_conc():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
     conc = []
     con = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        CR = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        CR = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             CR.updateWQState()
             c = Tank.pollut_quality
             conc.append(c['P1'])
-    with Simulation("./tests/inps/tank_variableinflow_constantremoval.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_constantremoval.inp") as sim:
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             co = Tank.pollut_quality
@@ -95,13 +95,13 @@ def test_ConstantRemoval_conc():
     assert error <= 0.03
 
 def test_ConstantRemoval_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        CR = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        CR = waterQuality(sim, dict1)
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             CR.updateWQState()
@@ -110,7 +110,7 @@ def test_ConstantRemoval_load():
             flow.append(sim._model.getNodeResult("Outfall",0))
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
-    with Simulation("./tests/inps/tank_variableinflow_constantremoval.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_constantremoval.inp") as sim:
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             c = Outfall.pollut_quality
@@ -125,18 +125,18 @@ def test_ConstantRemoval_load():
 
 # CoRemoval
 def test_CoRemoval_conc():
-    dict1 = {'Tank': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
-        'Tank': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
+    dict1 = {'Tank': {'pollutant': 'P2', 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
+        'Tank': {'pollutant': 'P1', 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
     conc_P1 = []
     con_P1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment2.inp") as sim:
-        CO = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment2.inp") as sim:
+        CO = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             CO.updateWQState()
             c = Tank.pollut_quality
             conc_P1.append(c['P1'])
-    with Simulation("./tests/inps/tank_variableinflow_coremoval.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_coremoval.inp") as sim:
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             co = Tank.pollut_quality
@@ -146,14 +146,14 @@ def test_CoRemoval_conc():
     assert error <= 0.03
 
 def test_CoRemoval_load():
-    dict1 = {'Tank': {'pollutant': 1, 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
-        'Tank': {'pollutant': 0, 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
+    dict1 = {'Tank': {'pollutant': 'P2', 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
+        'Tank': {'pollutant': 'P1', 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        CO = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        CO = waterQuality(sim, dict1)
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             CO.updateWQState()
@@ -162,7 +162,7 @@ def test_CoRemoval_load():
             flow.append(sim._model.getNodeResult("Outfall",0))
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
-    with Simulation("./tests/inps/tank_variableinflow_coremoval.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_coremoval.inp") as sim:
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             c = Outfall.pollut_quality
@@ -177,17 +177,17 @@ def test_CoRemoval_load():
 
 # ConcDependRemoval
 def test_ConcDependRemoval_conc():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
     conc = []
     con = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        CDR = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        CDR = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             CDR.updateWQState()
             c = Tank.pollut_quality
             conc.append(c['P1'])
-    with Simulation("./tests/inps/tank_variableinflow_concdependent.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_concdependent.inp") as sim:
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             co = Tank.pollut_quality
@@ -197,13 +197,13 @@ def test_ConcDependRemoval_conc():
     assert error <= 0.03
 
 def test_ConcDependRemoval_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        CDR = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        CDR = waterQuality(sim, dict1)
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             CDR.updateWQState()
@@ -212,7 +212,7 @@ def test_ConcDependRemoval_load():
             flow.append(sim._model.getNodeResult("Outfall",0))
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
-    with Simulation("./tests/inps/tank_variableinflow_concdependent.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_concdependent.inp") as sim:
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             c = Outfall.pollut_quality
@@ -227,17 +227,17 @@ def test_ConcDependRemoval_load():
 
 # NthOrderReaction
 def test_NthOrderReaction_conc():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
     conc = []
     con = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        NOR = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        NOR = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             NOR.updateWQState()
             c = Tank.pollut_quality
             conc.append(c['P1'])
-    with Simulation("./tests/inps/tank_variableinflow_nthorderreaction.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_nthorderreaction.inp") as sim:
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             co = Tank.pollut_quality
@@ -247,13 +247,13 @@ def test_NthOrderReaction_conc():
     assert error <= 0.03
 
 def test_NthOrderReaction_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        NOR = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        NOR = waterQuality(sim, dict1)
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             NOR.updateWQState()
@@ -262,7 +262,7 @@ def test_NthOrderReaction_load():
             flow.append(sim._model.getNodeResult("Outfall",0))
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
-    with Simulation("./tests/inps/tank_variableinflow_nthorderreaction.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_nthorderreaction.inp") as sim:
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             c = Outfall.pollut_quality
@@ -277,17 +277,17 @@ def test_NthOrderReaction_load():
 
 # kCModel
 def test_kCModel_conc():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'kCModel', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'kCModel', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     con = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        kCM = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        kCM = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             kCM.updateWQState()
             c = Tank.pollut_quality
             conc.append(c['P1'])
-    with Simulation("./tests/inps/tank_variableinflow_kcmodel.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_kcmodel.inp") as sim:
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             co = Tank.pollut_quality
@@ -297,13 +297,13 @@ def test_kCModel_conc():
     assert error <= 0.03
 
 def test_kcModel_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'kCModel', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'kCModel', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        kCM = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        kCM = waterQuality(sim, dict1)
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             kCM.updateWQState()
@@ -312,7 +312,7 @@ def test_kcModel_load():
             flow.append(sim._model.getNodeResult("Outfall",0))
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
-    with Simulation("./tests/inps/tank_variableinflow_kcmodel.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_kcmodel.inp") as sim:
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             c = Outfall.pollut_quality
@@ -327,17 +327,17 @@ def test_kcModel_load():
   
 # GravitySettling
 def test_GravitySettling_conc():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     con = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        GS = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        GS = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             GS.updateWQState()
             c = Tank.pollut_quality
             conc.append(c['P1'])
-    with Simulation("./tests/inps/tank_variableinflow_gravsettling.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_gravsettling.inp") as sim:
         Tank = Nodes(sim)["Tank"]
         for step in sim:
             co = Tank.pollut_quality
@@ -347,13 +347,13 @@ def test_GravitySettling_conc():
         assert error <= 0.03
 
 def test_GravitySettling_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        GS = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        GS = waterQuality(sim, dict1)
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             GS.updateWQState()
@@ -362,7 +362,7 @@ def test_GravitySettling_load():
             flow.append(sim._model.getNodeResult("Outfall",0))
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
-    with Simulation("./tests/inps/tank_variableinflow_gravsettling.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_gravsettling.inp") as sim:
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             c = Outfall.pollut_quality
@@ -376,13 +376,13 @@ def test_GravitySettling_load():
 
 
 def test_CSTR_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_constantinflow_notreatment.inp") as sim:
-        CS = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_constantinflow_notreatment.inp") as sim:
+        CS = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         Valve = Links(sim)["Valve"]
         for index,step in enumerate(sim):
@@ -402,19 +402,19 @@ def test_CSTR_load():
     assert error <= 0.03
 
 def test_CSTR_steadystate():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
     conc2 = []
     vol = []
     flow = []
-    with Simulation("./tests/inps/tank_constantinflow_notreatment.inp") as sim:
+    with Simulation("./inps/tank_constantinflow_notreatment.inp") as sim:
         Tank = Nodes(sim)["Tank"]
         for index,step in enumerate(sim):
             v = Tank.volume
             vol.append(v)
             q = Tank.total_inflow
             flow.append(q)
-    with Simulation("./tests/inps/tank_constantinflow_notreatment.inp") as sim:
-        CS = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_constantinflow_notreatment.inp") as sim:
+        CS = waterQuality(sim, dict1)
         Tank = Nodes(sim)["Tank"]
         for index,step in enumerate(sim):
             CS.updateWQState_CSTR(index)
@@ -425,13 +425,13 @@ def test_CSTR_steadystate():
     assert error <= 0.03
 
 def test_Phosphorus_load():
-    dict1 = {'Tank': {'pollutant': 0, 'method': 'Phosphorus', 'parameters': {'B1': 0.0000333, 'Ceq0': 0.0081, 'k': 0.00320, 'L': 0.91, 'A': 100,'E': 0.44}}}
+    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'Phosphorus', 'parameters': {'B1': 0.0000333, 'Ceq0': 0.0081, 'k': 0.00320, 'L': 0.91, 'A': 100,'E': 0.44}}}
     conc = []
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./tests/inps/tank_variableinflow_notreatment.inp") as sim:
-        GS = WaterQuality(sim, dict1)
+    with Simulation("./inps/tank_variableinflow_notreatment.inp") as sim:
+        GS = waterQuality(sim, dict1)
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             GS.updateWQState()
@@ -440,7 +440,7 @@ def test_Phosphorus_load():
             flow.append(sim._model.getNodeResult("Outfall",0))
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
-    with Simulation("./tests/inps/tank_variableinflow_gravsettling.inp") as sim:
+    with Simulation("./inps/tank_variableinflow_gravsettling.inp") as sim:
         Outfall = Nodes(sim)["Outfall"]
         for step in sim:
             c = Outfall.pollut_quality

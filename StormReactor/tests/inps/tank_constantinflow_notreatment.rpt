@@ -1,5 +1,5 @@
 
-  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.1 (Build 5.2.0.dev5)
+  OWA STORM WATER MANAGEMENT MODEL - VERSION v5.1.14 (OWA 2022-04-05)
   --------------------------------------------------------------
 
   
@@ -54,13 +54,13 @@
   Groundwater Inflow .......         0.000
   RDII Inflow ..............         0.000
   External Inflow ..........        89.965
-  External Outflow .........        15.019
+  External Outflow .........        88.695
   Flooding Loss ............         0.000
   Exfiltration Loss ........         0.000
-  Mass Reacted .............        74.852
+  Mass Reacted .............         0.000
   Initial Stored Mass ......         0.000
-  Final Stored Mass ........         0.209
-  Continuity Error (%) .....        -0.127
+  Final Stored Mass ........         1.273
+  Continuity Error (%) .....        -0.003
   
   
   ********************************
@@ -135,9 +135,9 @@
                          Freq      Flow      Flow      Volume            P1
   Outfall Node           Pcnt       CMS       CMS    10^6 ltr            kg
   -------------------------------------------------------------------------
-  Outfall              100.00     4.929     5.000       8.869        15.023
+  Outfall              100.00     4.929     5.000       8.869        88.720
   -------------------------------------------------------------------------
-  System               100.00     4.929     5.000       8.869        15.023
+  System               100.00     4.929     5.000       8.869        88.720
   
   
   ********************
@@ -167,9 +167,9 @@
                                   P1
   Link                            kg
   ----------------------------------
-  Valve                       15.023
+  Valve                       88.720
   
 
-  Analysis begun on:  Wed Feb 17 09:05:44 2021
-  Analysis ended on:  Wed Feb 17 09:05:45 2021
-  Total elapsed time: 00:00:01
+  Analysis begun on:  Thu Apr  7 15:57:02 2022
+  Analysis ended on:  Thu Apr  7 15:57:02 2022
+  Total elapsed time: < 1 sec

@@ -1,5 +1,5 @@
 
-  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.1 (Build 5.2.0.dev5)
+  OWA STORM WATER MANAGEMENT MODEL - VERSION v5.1.14 (OWA 2022-04-05)
   --------------------------------------------------------------
 
   
@@ -87,13 +87,13 @@
   Groundwater Inflow .......         0.000
   RDII Inflow ..............         0.000
   External Inflow ..........         0.000
-  External Outflow .........        76.130
+  External Outflow .........        83.478
   Flooding Loss ............         0.000
   Exfiltration Loss ........         0.000
-  Mass Reacted .............         7.502
+  Mass Reacted .............         0.000
   Initial Stored Mass ......         0.000
   Final Stored Mass ........         0.000
-  Continuity Error (%) .....        -0.373
+  Continuity Error (%) .....        -0.187
   
   
   ***************************
@@ -206,9 +206,9 @@
                          Freq      Flow      Flow      Volume            P1
   Outfall Node           Pcnt       CMS       CMS    10^6 ltr            kg
   -------------------------------------------------------------------------
-  Outfall               68.34     1.778     2.778      35.000        76.130
+  Outfall               68.34     1.778     2.778      35.000        83.478
   -------------------------------------------------------------------------
-  System                68.34     1.778     2.778      35.000        76.130
+  System                68.34     1.778     2.778      35.000        83.478
   
   
   ********************
@@ -249,9 +249,9 @@
                                   P1
   Link                            kg
   ----------------------------------
-  Valve                       76.130
+  Valve                       83.478
   
 
-  Analysis begun on:  Wed Feb 17 09:05:45 2021
-  Analysis ended on:  Wed Feb 17 09:05:49 2021
-  Total elapsed time: 00:00:04
+  Analysis begun on:  Thu Apr  7 15:57:02 2022
+  Analysis ended on:  Thu Apr  7 15:57:04 2022
+  Total elapsed time: 00:00:02
