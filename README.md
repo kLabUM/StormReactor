@@ -1,10 +1,27 @@
-# StormReactor: Python package for modeling any pollutant generation or treatment method in EPA SWMM
+# *StormReactor*: Python package for modeling any pollutant generation or treatment method in EPA SWMM
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 ## Overview 
 
-*StormReactor* was developed to expand the ability to model stormwater quality and water quality based real-time control in EPA's Stormwater Management Model (SWMM). It is a natural extension of *Open-Storm*'s(http://open-storm.org/) mission to open up and ease access into the technical world of smart stormwater systems. *StormReactor* enables users to model any stormwater pollutant treatment or generation method in any node or link in a stormwater network. A user can implement any SWMM treatment function defined in the *SWMM Reference Manual Volume III: Water Quality* or create their own.   
+*StormReactor* was developed to expand the ability to model stormwater quality and water quality based real-time control in EPA's Stormwater Management Model (SWMM). It is a natural extension of *Open-Storm*'s(http://open-storm.org/) mission to open up and ease access into the technical world of smart stormwater systems. *StormReactor* enables users to model any stormwater pollutant treatment or generation method in any node or link in a stormwater network. A user can implement any SWMM treatment function defined in the *SWMM Reference Manual Volume III: Water Quality*, select from a few additional methods we built, or create their own. 
 
+Note: In order to use *StormReactor*'s ability to change the pollutant concentration in a node, you MUST have treatment enabled in the SWMM input file. This means if you open your input file in a text editor, it should have a treatment listed for the node you want to access. When *StormReactor* runs, it will replace the treatment in the input file with the method you want. See snippet from an example input file below.
+
+```example1.inp
+STORAGE]
+;;Name           Elev.    MaxDepth   InitDepth  Shape      Curve Name/Params            N/A      Fevap    Psi      Ksat     IMD     
+;;-------------- -------- ---------- ----------- ---------- ---------------------------- -------- --------          -------- --------
+Tank             10       5          0          TABULAR    Tank_Curve                   0        0       
+
+[POLLUTANTS]
+;;Name           Units  Crain      Cgw        Crdii      Kdecay     SnowOnly   Co-Pollutant     Co-Frac    Cdwf       Cinit     
+;;-------------- ------ ---------- ---------- ---------- ---------- ---------- ---------------- ---------- ---------- ----------
+P1               MG/L   0.0        0.0        0          0.0        NO         *                0.0        0.0        0                     
+[TREATMENT]
+;;Node           Pollutant        Function  
+;;-------------- ---------------- ----------
+Tank             P1               R = 0.5
+```
 
 ## Getting Started 
 
@@ -17,16 +34,17 @@
 - pyswmm
 - scipy
 
-The SWMM pull request to be accepted. You can find it here: https://github.com/OpenWaterAnalytics/Stormwater-Management-Model/pull/302. The issue has also been raised on the swmm-python and PySWMM repositories here: https://github.com/OpenWaterAnalytics/swmm-python/issues/92 and https://github.com/OpenWaterAnalytics/pyswmm/issues/230. We are currently working on modifying swmm-python. Once the pull request has been approved for swmm-python, a similar PySWMM pull request will be initiated. Then, the final version of StormReactor will be available 
-through PyPI at https://pypi.python.org/pypi/StormReactor/.
+Due to the nature of working on open-source software, we are still waiting for all of the necessary changes to SWMM, swmm-python, and pyswmm are accepted into their respective code bases. The SWMM pull request can be found here: https://github.com/OpenWaterAnalytics/Stormwater-Management-Model/pull/368. The swmm-python pull request can be found here: https://github.com/OpenWaterAnalytics/swmm-python/pull/94. Finally, the pyswmm pull request can be found here: https://github.com/OpenWaterAnalytics/pyswmm/pull/335. Once these pull requests are aceepted, the final version of *StormReactor* will be available through PyPI at https://pypi.python.org/pypi/StormReactor/.
 
 ```bash 
 $ pip install StormReactor
 ```
 
-For now, please download directly from the following GitHub repositories.  
-StormReactor: https://github.com/kLabUM/StormReactor  
-Modified PySWMM: https://github.com/bemason/pyswmm_BM 
+For now, if you would like to use *StormReactor*, please download directly from the following GitHub repositories:  
+*StormReactor*: https://github.com/kLabUM/StormReactor
+PySWMM: https://github.com/bemason/pyswmm/tree/water_quality
+swmm-python: https://github.com/bemason/swmm-python
+SWMM: https://github.com/bemason/Stormwater-Management-Model
 
 Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
@@ -40,19 +58,18 @@ import StormReactor
 from pyswmm import Simulation
 
 # build water quality configuration dictionary
-config = {'detention_basin': { 'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}},\
-			'channel': { 'pollutant': 0, 'method': 'Erosion', 'parameters': {'w': 10.0, 'So': 0.037, 'Ss': 1.6, 'd50': 0.04}},\
-					{ 'pollutant': 0, 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}}}
+config = {'detention_basin': { 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}},\
+			'channel': { 'pollutant': 'P1', 'method': 'Erosion', 'parameters': {'w': 10.0, 'So': 0.037, 'Ss': 1.6, 'd50': 0.04}},\
+					{ 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}}}
 
 
 # initialize water quality
 with Simulation('example1.inp') as sim:
-	WQ = WaterQuality(sim, config)
+	WQ = waterQuality(sim, config)
 
 	for step in sim:
 		# update each time step
 		WQ.updateWQState()
-
 ```
 
 ### Example 2
@@ -65,13 +82,13 @@ import StormReactor
 from pyswmm import Simulation
 
 # build water quality configuration dictionary
-config = {'detention_basin': { 'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.0005, 'n': 1.0, 'Co': 10.0}},\
-			'wetland': { 'pollutant': 0, 'method': 'CSTR', 'parameters': {'k': -0.000089, 'n': 3.0, 'Co': 10.0}}}
+config = {'detention_basin': { 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.0005, 'n': 1.0, 'Co': 10.0}},\
+			'wetland': { 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.000089, 'n': 3.0, 'Co': 10.0}}}
 
 
 # initialize water quality
 with Simulation('example2.inp') as sim:
-	WQ = WaterQuality(sim, config)
+	WQ = waterQuality(sim, config)
 
 	for step in sim:
 		# update each time step
@@ -94,8 +111,8 @@ self.method = {
     "NthOrderReaction": self._NthOrderReaction,
     "kCModel": self._kCModel,
     "GravitySettling": self._GravitySettling,
-    "Erosion": self._Erosion,
     "CSTR": self._CSTRSolver,
+    "Phosphorus": self._Phosphorus,
     "NewMethod": self._NewMethod
     }
 ```
@@ -114,9 +131,9 @@ def _NewMethod(self, ID, pollutant_ID, dictionary, flag):
 	Set the concentration in SWMM using the appropriate setters using the flag feature.
 	"""
 	if self.flag == 0:
-		self.sim._model.setNodePollutant(ID, pollutant_ID, Cnew)
+		self.sim._model.setNodePollut(ID, pollutant_ID, Cnew)
 	else:
-		self.sim._model.setLinkPollutant(ID, pollutant_ID, Cnew)
+		self.sim._model.setLinkPollut(ID, pollutant_ID, Cnew)
 	
 ```
 4. Now run your new model! Modify code as needed.

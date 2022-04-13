@@ -7,13 +7,13 @@ import pytest
 """
 SWMM Water Quality Methods:
 For each method, check the cummulative load in the link where the 
-pollutant transformation is occurring is equivalent to the cummulative 
-load directly downstream.
+pollutant transformation is occurring is equivalent (difference <= 0.03) 
+to the cummulative load directly downstream.
 
 Additional Water Quality Methods:
 For each method, check the cummulative load in the link where the 
-pollutant transformation is occurring is equivalent to the cummulative 
-load downstream.
+pollutant transformation is occurring is equivalent (difference <= 0.03)
+to the cummulative load downstream.
 """
 
 # SWMM WATER QUALITY METHODS
@@ -31,6 +31,7 @@ def test_EventMeanConc_load():
         for step in sim:
             EMC.updateWQState()
             c = culvert.pollut_quality
+            print(c['P1'])
             conc.append(c['P1'])
             c1 = outlet.pollut_quality
             conc1.append(c1['P1'])
@@ -215,29 +216,4 @@ def test_Erosion_load():
     print(error)
     assert error <= 0.03
 """
-# Phosphorus
-def test_Phosphorus_load():
-    dict1 = {'Culvert': {'pollutant': 'P1', 'method': 'Phosphorus', 'parameters': {'B1': 0.0000333, 'Ceq0': 0.0081, 'k': 0.00320, 'L': 0.91, 'A': 100,'E': 0.44}}}
-    conc = []
-    conc1 = []
-    flow = []
-    flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
-        GS = waterQuality(sim, dict1)
-        culvert = Links(sim)["Culvert"]
-        outlet = Nodes(sim)["Outlet"]
-        for step in sim:
-            GS.updateWQState()
-            c = culvert.pollut_quality
-            conc.append(c['P1'])
-            c1 = outlet.pollut_quality
-            conc1.append(c1['P1'])
-            flow.append(sim._model.getLinkResult("Culvert",0))
-            flow1.append(sim._model.getNodeResult("Outlet",0))
-        load = [a*b for a,b in zip(conc,flow)]
-        cum_load = np.cumsum(load)
-        load1 = [a*b for a,b in zip(conc1,flow1)]
-        cum_load1 = np.cumsum(load1)    
-    error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
-    print(error)
-    assert error <= 0.03
+

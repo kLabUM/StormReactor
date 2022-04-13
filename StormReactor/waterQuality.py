@@ -116,7 +116,6 @@ class waterQuality:
         C = constant treatment concentration for each pollutant (SI/US: mg/L)
         """
 
-        
         if self.flag == 0:
             # Set new concentration
             self.sim._model.setNodePollut(ID, pollutantID, parameters["C"])
@@ -341,6 +340,7 @@ class waterQuality:
             # Set new concentration
             self.sim._model.setLinkPollut(ID, pollutantID, Cnew)
 
+
     """
     Need to add conduit velocity getter to swmm/pyswmm
     def _Erosion(self, ID, pollutantID, parameters, flag): 
@@ -419,6 +419,7 @@ class waterQuality:
                     self.sim._model.setLinkPollut(ID, pollutantID, Cnew)
     """
 
+
     def _CSTR_tank(self, t, C, Qin, Cin, Qout, V, k, n):
         """
         UNSTEADY CONTINUOUSLY STIRRED TANK REACTOR (CSTR)
@@ -479,7 +480,8 @@ class waterQuality:
         else:
             print("CSTR does not work for links.")
 
-    def _Phosphorus(self, ID, pollutantID, parameters, flag):
+
+    def _Phosphorus(self, index, ID, pollutantID, parameters, flag):
         """
         LI & DAVIS BIORETENTION CELL TOTAL PHOSPHOURS MODEL (2016)
         Li and Davis (2016) developed a dissolved and particulate phosphorus
@@ -522,26 +524,5 @@ class waterQuality:
             else:
                 t = 0
         else:
-            # Get SWMM parameters
-            C = self.sim._model.getLinkPollut(ID, tka.LinkPollut.reactorQual.value)[pollutant_index]
-            Q = self.sim._model.getLinkResult(ID, tka.LinkResults.newFlow.value)
-            # Time calculations for phosphorus model
-            if Q >= 0.01:
-                # Get current time
-                current_step = self.sim.current_time
-                # Calculate model dt in seconds
-                dt = (current_step - self.last_timestep).total_seconds()
-                # Accumulate time elapsed since water entered link
-                t = t + dt
-                # Updating reference step
-                self.last_timestep = current_step
-                # Calculate new concentration
-                Cnew = (C*np.exp((-parameters["k"]*parameters["L"]\
-                    *parameters["A"]*parameters["E"])/Q))+(parameters["Ceq0"]\
-                    *np.exp(parameters["B1"]*t))*(1-(np.exp((-parameters["k"]\
-                    *parameters["L"]*parameters["A"]*parameters["E"])/Q)))
-                # Set new concentration
-                self.sim._model.setLinkPollut(ID, pollutantID, Cnew)
-            else:
-                t = 0
+            print("Phospohrus does not work for links.")
 
