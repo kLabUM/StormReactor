@@ -41,10 +41,10 @@ $ pip install StormReactor
 ```
 
 For now, if you would like to use *StormReactor*, please download directly from the following GitHub repositories:  
-*StormReactor*: https://github.com/kLabUM/StormReactor
-PySWMM: https://github.com/bemason/pyswmm/tree/water_quality
-swmm-python: https://github.com/bemason/swmm-python
-SWMM: https://github.com/bemason/Stormwater-Management-Model
+*StormReactor*: pip install git+https://github.com/kLabUM/StormReactor.git
+PySWMM: pip install git+https://github.com/bemason/pyswmm/tree/water_quality
+swmm-python: pip install git+https://github.com/bemason/swmm-python
+SWMM: pip install git+https://github.com/OpenWaterAnalytics/Stormwater-Management-Model.git
 
 Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
