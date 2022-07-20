@@ -84,7 +84,6 @@ class waterQuality:
                     self.config[asset_ID]['pollutant'], \
                     self.config[asset_ID]['parameters'], self.flag)
             
-    
 
     def updateWQState_CSTR(self, index):
         """
@@ -132,11 +131,9 @@ class waterQuality:
 
         if self.flag == 0:
             # Get SWMM parameter
-            Cin = self.sim._model.getNodePollut(ID, 1 )[pollutant_index]
-            print('Cin', Cin)
+            Cin = self.sim._model.getNodePollut(ID, tka.NodePollut.inflowQual.value)[pollutant_index]
             # Calculate new concentration
             Cnew = (1-parameters["R"])*Cin
-            print('Cnew', Cnew)
             # Set new concentration 
             self.sim._model.setNodePollut(ID, pollutantID, Cnew)
         else:
