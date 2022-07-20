@@ -69,23 +69,21 @@ class waterQuality:
         links = Links(self.sim)
 
         for asset_ID, asset_info in self.config.items():
-            for node in nodes:
-                attribute =self.config[asset_ID]['method']
-                
-                if node.nodeid == asset_ID:
-                    self.flag = 0
-                    self.method[attribute](asset_ID, \
-                            self.config[asset_ID]['pollutant'], \
-                            self.config[asset_ID]['parameters'], self.flag)
             
-            for link in links: 
+            if asset_ID in nodes:
                 attribute =self.config[asset_ID]['method']
-       
-                if link.linkid == asset_ID:
-                    self.flag = 1
-                    self.method[attribute](asset_ID, \
-                            self.config[asset_ID]['pollutant'], \
-                            self.config[asset_ID]['parameters'], self.flag)
+                self.flag = 0
+                self.method[attribute](asset_ID, \
+                    self.config[asset_ID]['pollutant'], \
+                    self.config[asset_ID]['parameters'], self.flag)
+            
+            elif asset_ID in links: 
+                attribute =self.config[asset_ID]['method']
+                self.flag = 1
+                self.method[attribute](asset_ID, \
+                    self.config[asset_ID]['pollutant'], \
+                    self.config[asset_ID]['parameters'], self.flag)
+            
     
 
     def updateWQState_CSTR(self, index):
@@ -97,14 +95,12 @@ class waterQuality:
         nodes = Nodes(self.sim)
 
         for asset_ID, asset_info in self.config.items():
-            for node in nodes:
+            if asset_ID in nodes:
                 attribute = self.config[asset_ID]['method']
-                
-                if node.nodeid == asset_ID:
-                    self.flag = 0
-                    self.method[attribute](index, asset_ID, \
-                            self.config[asset_ID]['pollutant'], \
-                            self.config[asset_ID]['parameters'], self.flag)
+                self.flag = 0
+                self.method[attribute](index, asset_ID, \
+                    self.config[asset_ID]['pollutant'], \
+                    self.config[asset_ID]['parameters'], self.flag)
 
 
     def _EventMeanConc(self, ID, pollutantID, parameters, flag):
@@ -136,9 +132,11 @@ class waterQuality:
 
         if self.flag == 0:
             # Get SWMM parameter
-            Cin = self.sim._model.getNodePollut(ID, tka.NodePollut.inflowQual.value)[pollutant_index]
+            Cin = self.sim._model.getNodePollut(ID, 1 )[pollutant_index]
+            print('Cin', Cin)
             # Calculate new concentration
             Cnew = (1-parameters["R"])*Cin
+            print('Cnew', Cnew)
             # Set new concentration 
             self.sim._model.setNodePollut(ID, pollutantID, Cnew)
         else:

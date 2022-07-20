@@ -77,13 +77,6 @@ Tank             FLOW             ""               FLOW     1.0      1.0      5
 Tank             P1               ""               CONCENTRATION     1.0      1.0	10               
 Tank             P2               ""               CONCENTRATION     1.0      1.0	10                    
 
-
-[TREATMENT]
-;;Node           Pollutant        Function  
-;;-------------- ---------------- ----------
-Tank             P1               C = 10.0
-Tank 			 P2				  C = 10.0
-
 [CURVES]
 ;;Name           Type       X-Value    Y-Value   
 ;;-------------- ---------- ---------- ----------

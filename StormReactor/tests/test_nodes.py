@@ -26,24 +26,24 @@ concentration is equal to the closed form steady state CSTR equation.
 # SWMM WATER QUALITY METHODS
 # Event Mean Concentration
 def test_EventMeanConc_conc():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
+    dict1 = {'Tank1': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
     conc = []
     con = []
-    with Simulation("./inps/model_constantinflow_constanteffluent.inp") as sim:
+    with Simulation("./inps/model_twotanks_constantinflow_constanteffluent.inp") as sim:
         EMC = waterQuality(sim, dict1)
-        Tank = Nodes(sim)["Tank"]
+        Tank1 = Nodes(sim)["Tank1"]
         for step in sim:
             EMC.updateWQState()
-            c = Tank.pollut_quality
+            c = Tank1.pollut_quality
             conc.append(c['P1'])
-    with Simulation("./inps/model_constantinflow_constanteffluent_emc.inp") as sim:
-        Tank = Nodes(sim)["Tank"]
+    with Simulation("./inps/model_twotanks_constantinflow_constanteffluent_emc.inp") as sim:
+        Tank1 = Nodes(sim)["Tank1"]
         for step in sim:
-            co = Tank.pollut_quality
+            co = Tank1.pollut_quality
             con.append(co['P1'])
     error = mse(con, conc, squared=True)
     print(error)
-    assert error <= 0.06
+    assert error <= 0.03
 
 def test_EventMeanConc_load():
     dict1 = {'Tank': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
@@ -452,3 +452,36 @@ def test_Phosphorus_load():
     print(error)
     assert error <= 0.03
 
+
+# Test dictionary with multiple assets
+def test_MultipleTreatments():
+    dict1 = {'Tank1': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}, 
+    'Tank1': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 2.0}}}
+    conc1 = []
+    con1 = []
+    conc2 = []
+    con2 = []
+    with Simulation("./inps/model_twotanks_constantinflow_constanteffluent.inp") as sim:
+        EMC = waterQuality(sim, dict1)
+        Tank1 = Nodes(sim)["Tank1"]
+        Tank2 = Nodes(sim)["Tank2"]
+        for step in sim:
+            EMC.updateWQState()
+            c1 = Tank1.pollut_quality
+            conc1.append(c1['P1'])
+            c2 = Tank2.pollut_quality
+            conc2.append(c2['P1'])
+    with Simulation("./inps/model_twotanks_constantinflow_constanteffluent_twotreatments.inp") as sim:
+        Tank1 = Nodes(sim)["Tank1"]
+        Tank2 = Nodes(sim)["Tank2"]
+        for step in sim:
+            co1 = Tank1.pollut_quality
+            con1.append(co1['P1'])
+            co2 = Tank2.pollut_quality
+            con2.append(co2['P1'])
+    error1 = mse(con1, conc1, squared=True)
+    error2 = mse(con2, conc2, squared=True)
+    print(error1, error2)
+    assert (error1, error2) <= (0.03, 0.03)
+
+    
