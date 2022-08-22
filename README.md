@@ -45,7 +45,7 @@ $ pip install StormReactor
 
 ### Example 1
 
-Here is a simple example on how to use *StormReactor* for modeling a variety of water quality methods (e.g., gravity settling, erosion) for a pollutant (e.g., TSS) in several stormwater assets (e.g., basin, channel). This example covers all existing pollutant treatment and generation methods in *StormReactor* except a completely stirred tank reactor (CSTR). Please see the next example for modeling a CSTR.
+Here is a simple example on how to use *StormReactor* for modeling a variety of water quality methods (e.g., gravity settling, event mean concentration) for a pollutant (e.g., TSS) in several stormwater assets (e.g., basin, channel). This example covers all existing pollutant treatment and generation methods in *StormReactor* except a completely stirred tank reactor (CSTR). Please see the next example for modeling a CSTR.
 
 ```python 
 # import packages
@@ -53,9 +53,8 @@ import StormReactor
 from pyswmm import Simulation
 
 # build water quality configuration dictionary
-config = {'detention_basin': { 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}},\
-			'channel': { 'pollutant': 'P1', 'method': 'Erosion', 'parameters': {'w': 10.0, 'So': 0.037, 'Ss': 1.6, 'd50': 0.04}},\
-					{ 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}}}
+config = {'basin': { 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}},\
+			'channel': { 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 10.0}}}
 
 
 # initialize water quality
@@ -77,7 +76,7 @@ import StormReactor
 from pyswmm import Simulation
 
 # build water quality configuration dictionary
-config = {'detention_basin': { 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.0005, 'n': 1.0, 'Co': 10.0}},\
+config = {'basin': { 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.0005, 'n': 1.0, 'Co': 10.0}},\
 			'wetland': { 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.000089, 'n': 3.0, 'Co': 10.0}}}
 
 
@@ -112,7 +111,7 @@ self.method = {
     "NewMethod": self._NewMethod
     }
 ```
-3. Add the definition of your new water quality method to the end of `waterQuality()` within waterQuality.py. Be sure to include all the necessary method inputs including self, ID, pollutant_ID, dictionary, and flag. You can use any of the PySWMM/SWMMM getters to get the necessary water quantity and quality values for your model. Also be sure to set `parameters = dictionary` so that you can access your inputs in your dictionary. Once your model code is added, don't forget to set the new node and link concentrations in SWMM using the appropriate setters.
+3. Add the definition of your new water quality method to the end of `waterQuality()` within waterQuality.py. Be sure to include all the necessary method inputs: `self, ID, pollutant_ID, dictionary, flag`. You can use any of the PySWMM/SWMMM getters to get the necessary water quantity and quality values for your model. Also be sure to set `parameters = dictionary` so that you can access your inputs in your dictionary. Once your model code is added, don't forget to set the new node and link concentrations in SWMM using the appropriate setters.
 ```python 
 def _NewMethod(self, ID, pollutant_ID, dictionary, flag):
 	"""
