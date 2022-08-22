@@ -23,9 +23,7 @@ P1               MG/L   0.0        0.0        0          0.0        NO         *
 Tank             P1               R = 0.5
 ```
 
-## Getting Started 
-
-### Installation 
+## Installation 
 
 **Requirements**
 
@@ -42,9 +40,9 @@ $ pip install StormReactor
 
 Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
-### How to Use *StormReactor*
+## How to Use *StormReactor*
 
-#### Example 1
+### Example 1
 
 Here is a simple example on how to use *StormReactor* for modeling a variety of water quality methods (e.g., gravity settling, erosion) for a pollutant (e.g., TSS) in several stormwater assets (e.g., basin, channel). This example covers all existing pollutant treatment and generation methods in *StormReactor* except a completely stirred tank reactor (CSTR). Please see the next example for modeling a CSTR.
 
@@ -68,7 +66,7 @@ with Simulation('example1.inp') as sim:
 		WQ.updateWQState()
 ```
 
-#### Example 2
+### Example 2
 
 Here is a simple example for modeling a CSTR for a pollutant (e.g., nitrate) in several stormwater assets (e.g., basin, wetland). Note you must call `updateWQState_CSTR(index)` instead of `updateWQState()` because the CSTR code requires the additonal input of `index`. This is the only difference for modeling a CSTR.
 
