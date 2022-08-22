@@ -81,7 +81,15 @@ P2               MG/L   0.0        0.0        0          0.0        NO         *
 [INFLOWS]
 ;;Node           Constituent      Time Series      Type     Mfactor  Sfactor  Baseline Pattern
 ;;-------------- ---------------- ---------------- -------- -------- -------- -------- --------
-Tank1            FLOW             ""               FLOW     1.0      1.0      5       
+Tank1            FLOW             ""               FLOW     1.0      1.0      5     
+Tank1            P1               ""               CONCENTRATION     1.0      1.0	10                    
+Tank1            P2               ""               CONCENTRATION     1.0      1.0	10                    
+
+[TREATMENT]
+;;Node           Pollutant        Function  
+;;-------------- ---------------- ----------
+Tank2            P1               C=10
+Tank1            P1               C=10
 
 [CURVES]
 ;;Name           Type       X-Value    Y-Value   

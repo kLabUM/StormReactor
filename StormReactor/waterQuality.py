@@ -68,22 +68,24 @@ class waterQuality:
         nodes = Nodes(self.sim)
         links = Links(self.sim)
 
-        for asset_ID, asset_info in self.config.items():
+        for node in nodes:
+            for asset_ID, asset_info in self.config.items():
+                if node.nodeid == asset_ID:
+                    attribute =self.config[asset_ID]['method']
+                    self.flag = 0
+                    self.method[attribute](asset_ID, \
+                        self.config[asset_ID]['pollutant'], \
+                        self.config[asset_ID]['parameters'], self.flag)
             
-            if asset_ID in nodes:
-                attribute =self.config[asset_ID]['method']
-                self.flag = 0
-                self.method[attribute](asset_ID, \
-                    self.config[asset_ID]['pollutant'], \
-                    self.config[asset_ID]['parameters'], self.flag)
-            
-            elif asset_ID in links: 
-                attribute =self.config[asset_ID]['method']
-                self.flag = 1
-                self.method[attribute](asset_ID, \
-                    self.config[asset_ID]['pollutant'], \
-                    self.config[asset_ID]['parameters'], self.flag)
-            
+        for link in links:
+            for asset_ID, asset_info in self.config.items():
+                if link.linkid == asset_ID:
+                    attribute =self.config[asset_ID]['method']
+                    self.flag = 1
+                    self.method[attribute](asset_ID, \
+                        self.config[asset_ID]['pollutant'], \
+                        self.config[asset_ID]['parameters'], self.flag)            
+
 
     def updateWQState_CSTR(self, index):
         """

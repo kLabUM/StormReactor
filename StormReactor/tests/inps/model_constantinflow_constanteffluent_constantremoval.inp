@@ -68,13 +68,14 @@ Valve            RECT_CLOSED  1                1          0          0
 ;;Name           Units  Crain      Cgw        Crdii      Kdecay     SnowOnly   Co-Pollutant     Co-Frac    Cdwf       Cinit     
 ;;-------------- ------ ---------- ---------- ---------- ---------- ---------- ---------------- ---------- ---------- ----------
 P1               MG/L   0.0        0.0        0          0.0        NO         *                0.0        0.0        0         
-
+P2               MG/L   0.0        0.0        0          0.0        NO         *                0.0        0.0        0         
 
 [INFLOWS]
 ;;Node           Constituent      Time Series      Type     Mfactor  Sfactor  Baseline Pattern
 ;;-------------- ---------------- ---------------- -------- -------- -------- -------- --------
-Tank             FLOW             ""               FLOW     1.0      1.0      5                
-Tank             P1               ""               CONCENTRATION     1.0      1.0	10                    
+Tank             FLOW             ""               FLOW     1.0      1.0      5        
+Tank             P1               ""               CONCENTRATION     1.0      1.0	10                                            
+
 
 [TREATMENT]
 ;;Node           Pollutant        Function  
