@@ -34,7 +34,7 @@ Tank             P1               R = 0.5
 
 **PyPI**
 
-*StormReactor* is available through PyPI at https://pypi.python.org/pypi/StormReactor/. You can download and install *StormReactor* in your terminal using the command below. Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
+*StormReactor* is available through PyPI at https://pypi.python.org/pypi/StormReactor/ or you can install it directly in your terminal using the command below. Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
 ```bash 
 $ pip install StormReactor
