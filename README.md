@@ -31,20 +31,14 @@ Tank             P1               R = 0.5
 
 - python 3.6+
 - numpy
-- pyswmm
+- pyswmm 1.2.0+
 - scipy
 
-Due to the nature of working on open-source software, we are still waiting for all of the necessary changes to SWMM, swmm-python, and pyswmm are accepted into their respective code bases. The SWMM pull request can be found here: https://github.com/OpenWaterAnalytics/Stormwater-Management-Model/pull/368. The swmm-python pull request can be found here: https://github.com/OpenWaterAnalytics/swmm-python/pull/94. Finally, the pyswmm pull request can be found here: https://github.com/OpenWaterAnalytics/pyswmm/pull/335. Once these pull requests are aceepted, the final version of *StormReactor* will be available through PyPI at https://pypi.python.org/pypi/StormReactor/.
+*StormReactor* is available through PyPI at https://pypi.python.org/pypi/StormReactor/.
 
 ```bash 
 $ pip install StormReactor
 ```
-
-For now, if you would like to use *StormReactor*, please download directly from the following GitHub repositories:  
-*StormReactor*: pip install git+https://github.com/kLabUM/StormReactor.git
-PySWMM: pip install git+https://github.com/bemason/pyswmm/tree/water_quality
-swmm-python: pip install git+https://github.com/bemason/swmm-python
-SWMM: pip install git+https://github.com/OpenWaterAnalytics/Stormwater-Management-Model.git
 
 Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
