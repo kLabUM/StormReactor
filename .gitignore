@@ -40,3 +40,7 @@ labels.txt
 *.chi
 *.CSV
 *.thm
+CONTRIBUTORS
+LICENSE
+stormreactor.pypirc
+pyvenv.cfg
