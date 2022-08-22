@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/kLabUM/StormReactor",
-    packages=['StormReactor'],
+    packages=["StormReactor"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
@@ -24,5 +24,7 @@ setuptools.setup(
         "scipy>=1.7.1",
     ],
     python_requires='>=3.6',
+
+    keywords= "swmm pyswmm pollutants modeling water-quality",
 )
 
