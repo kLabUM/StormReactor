@@ -23,22 +23,22 @@ P1               MG/L   0.0        0.0        0          0.0        NO         *
 Tank             P1               R = 0.5
 ```
 
+
 ## Installation 
 
 **Requirements**
-
 - python 3.6+
 - numpy
 - pyswmm 1.2.0+
 - scipy
 
-*StormReactor* is available through PyPI at https://pypi.python.org/pypi/StormReactor/.
+**PyPI**
+*StormReactor* is available through PyPI at https://pypi.python.org/pypi/StormReactor/. You can download and install *StormReactor* in your terminal using the command below. Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
 ```bash 
 $ pip install StormReactor
 ```
 
-Please raise an issue on the repository or reach out if you run into any issues installing or using the package. 
 
 ## How to Use *StormReactor*
 
@@ -90,6 +90,7 @@ with Simulation('example2.inp') as sim:
 
 ```
 
+
 ## Creating Your Own Water Quality Method
 
 To create a new water quality method, follow the steps below:
@@ -132,9 +133,11 @@ def _NewMethod(self, ID, pollutant_ID, dictionary, flag):
 ```
 4. Now run your new model! Modify code as needed.
 
+
 ## Bugs
 
-Our issue tracker is at https://github.com/kLabUM/StormReactor/issues. Please report any bugs that you find. Or even better, fork the repository on GitHub and create a pull request. All changes are welcome, big or small, and we will help make the pull request if you are new to git (just ask on the issue).
+Our issue tracker is at https://github.com/kLabUM/StormReactor/issues. Please report any bugs that you find. Or even better, fork the repository on GitHub and create a pull request. All changes are welcome, big or small, and we will help you make the pull request if you are new to git (just ask on the issue).
+
 
 ## Contributions
 
