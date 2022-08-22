@@ -96,7 +96,7 @@ with Simulation('example2.inp') as sim:
 
 To create a new water quality method, follow the steps below:
 1. Fork the repository to your own personal repository.
-2. Add the name of your new method to the water quality methods definition in waterQuality() within waterQuality.py
+2. Add the name of your new method to the water quality methods definition in `waterQuality()` within waterQuality.py
 ```python 
 # Water quality methods
 self.method = {
@@ -112,7 +112,7 @@ self.method = {
     "NewMethod": self._NewMethod
     }
 ```
-3. Add the definition of your new water quality method to the end of waterQuality() within waterQuality.py. Be sure to include all the necessary method inputs including self, ID, pollutant_ID, dictionary, and flag. You can use any of the PySWMM/SWMMM getters to get necessary water quantity and quality values for your model. Also be sure to set "parameters = dictionary" so that you can access your inputs in your dictionary. Once your model code is added, don't forget to set the new node and link concentrations in SWMM using the appropriate setters.
+3. Add the definition of your new water quality method to the end of `waterQuality()` within waterQuality.py. Be sure to include all the necessary method inputs including self, ID, pollutant_ID, dictionary, and flag. You can use any of the PySWMM/SWMMM getters to get the necessary water quantity and quality values for your model. Also be sure to set `parameters = dictionary` so that you can access your inputs in your dictionary. Once your model code is added, don't forget to set the new node and link concentrations in SWMM using the appropriate setters.
 ```python 
 def _NewMethod(self, ID, pollutant_ID, dictionary, flag):
 	"""
