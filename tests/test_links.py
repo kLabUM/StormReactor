@@ -217,3 +217,26 @@ def test_Erosion_load():
     assert error <= 0.03
 """
 
+# Test dictionary with multiple assets
+def test_MultipleTreatments():
+    dict1 = {'Culvert': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}, \
+            'Channel': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 2.0}}}
+    conc = []
+    conc1 = []
+    c_1 = 5.0
+    c_2 = 2.0
+    with Simulation("./inps/LinkTest_variableinflow2.inp") as sim:
+        EMC = waterQuality(sim, dict1)
+        culvert = Links(sim)["Culvert"]
+        channel = Links(sim)["Channel"]
+        for step in sim:
+            EMC.updateWQState()
+            c1 = culvert.pollut_quality['P1']
+            conc.append(c1)
+            c2 = channel.pollut_quality['P1']
+            conc1.append(c2)
+    print(conc[-1], conc1[-1])
+    diff1 = abs(conc[-1] - c_1)
+    diff2 = abs(conc1[-1] - c_2)
+    print(diff1, diff2)
+    assert (diff1, diff2) <= (0.03, 0.03)
