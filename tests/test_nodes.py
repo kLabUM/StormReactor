@@ -26,7 +26,7 @@ concentration is equal to the closed form steady state CSTR equation.
 # SWMM WATER QUALITY METHODS
 # Event Mean Concentration
 def test_EventMeanConc_conc():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
     conc = []
     con = []
     with Simulation("./inps/model_constantinflow_constanteffluent.inp") as sim:
@@ -46,7 +46,7 @@ def test_EventMeanConc_conc():
     assert error <= 0.06
 
 def test_EventMeanConc_load():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -76,7 +76,7 @@ def test_EventMeanConc_load():
 
 # Constant Removal
 def test_ConstantRemoval_conc():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
     conc = []
     con = []
     with Simulation("./inps/model_constantinflow_constanteffluent.inp") as sim:
@@ -96,7 +96,7 @@ def test_ConstantRemoval_conc():
     assert error <= 0.06
 
 def test_ConstantRemoval_load():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'ConstantRemoval', 'parameters': {'R': 0.5}}}
     conc = []
     conc1 = []
     flow = []
@@ -126,8 +126,8 @@ def test_ConstantRemoval_load():
 
 # CoRemoval
 def test_CoRemoval_conc():
-    dict1 = {'Tank': {'pollutant': 'P2', 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
-        'Tank': {'pollutant': 'P1', 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P2', 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
+        'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
     conc_P1 = []
     con_P1 = []
     with Simulation("./inps/model_constantinflow_constanteffluent.inp") as sim:
@@ -147,8 +147,8 @@ def test_CoRemoval_conc():
     assert error <= 0.06
 
 def test_CoRemoval_load():
-    dict1 = {'Tank': {'pollutant': 'P2', 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
-        'Tank': {'pollutant': 'P1', 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P2', 'method': 'ConstantRemoval', 'parameters': {'R': 0.15}},\
+        'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'CoRemoval', 'parameters': {'R1': 0.75, 'R2': 0.15}}}
     conc = []
     conc1 = []
     flow = []
@@ -178,7 +178,7 @@ def test_CoRemoval_load():
 
 # ConcDependRemoval
 def test_ConcDependRemoval_conc():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
     conc = []
     con = []
     with Simulation("./inps/model_constantinflow_constanteffluent.inp") as sim:
@@ -198,7 +198,7 @@ def test_ConcDependRemoval_conc():
     assert error <= 0.06
 
 def test_ConcDependRemoval_load():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'ConcDependRemoval', 'parameters': {'R_l': 0.50, 'BC': 10.0, 'R_u': 0.75}}}
     conc = []
     conc1 = []
     flow = []
@@ -228,7 +228,7 @@ def test_ConcDependRemoval_load():
 
 # NthOrderReaction
 def test_NthOrderReaction_conc():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
     conc = []
     con = []
     with Simulation("./inps/model_constantinflow_constanteffluent.inp") as sim:
@@ -248,7 +248,7 @@ def test_NthOrderReaction_conc():
     assert error <= 0.06
 
 def test_NthOrderReaction_load():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'NthOrderReaction', 'parameters': {'k': 0.01, 'n': 2.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -278,7 +278,7 @@ def test_NthOrderReaction_load():
 
 # kCModel
 def test_kCModel_conc():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'kCModel', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'kCModel', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     con = []
     with Simulation("./inps/model_constantinflow_constanteffluent.inp") as sim:
@@ -298,7 +298,7 @@ def test_kCModel_conc():
     assert error <= 0.06
 
 def test_kcModel_load():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'kCModel', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'kCModel', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -328,7 +328,7 @@ def test_kcModel_load():
   
 # GravitySettling
 def test_GravitySettling_conc():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     con = []
     with Simulation("./inps/model_constantinflow_constanteffluent.inp") as sim:
@@ -348,7 +348,7 @@ def test_GravitySettling_conc():
         assert error <= 0.06
 
 def test_GravitySettling_load():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -377,7 +377,7 @@ def test_GravitySettling_load():
 
 
 def test_CSTR_load():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
     conc = []
     conc1 = []
     flow = []
@@ -403,7 +403,7 @@ def test_CSTR_load():
     assert error <= 0.03
 
 def test_CSTR_steadystate():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.2, 'n': 1.0, 'c0': 10.0}}}
     conc2 = []
     vol = []
     flow = []
@@ -427,7 +427,7 @@ def test_CSTR_steadystate():
 
 
 def test_Phosphorus_load():
-    dict1 = {'Tank': {'pollutant': 'P1', 'method': 'Phosphorus', 'parameters': {'B1': 0.0000333, 'Ceq0': 0.0081, 'k': 0.00320, 'L': 0.91, 'A': 100,'E': 0.44}}}
+    dict1 = {'Tank': {'type': 'node', 'pollutant': 'P1', 'method': 'Phosphorus', 'parameters': {'B1': 0.0000333, 'Ceq0': 0.0081, 'k': 0.00320, 'L': 0.91, 'A': 100,'E': 0.44}}}
     conc = []
     conc1 = []
     flow = []
@@ -455,8 +455,8 @@ def test_Phosphorus_load():
 
 # Test dictionary with multiple assets
 def test_MultipleTreatments():
-    dict1 = {'Tank1': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}, 
-    'Tank2': {'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 2.0}}}
+    dict1 = {'Tank1': {'type': 'node', 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 5.0}}, 
+    'Tank2': {'type': 'node', 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 2.0}}}
     conc1 = []
     con1 = []
     conc2 = []
