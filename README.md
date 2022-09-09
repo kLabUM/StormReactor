@@ -53,8 +53,8 @@ import StormReactor
 from pyswmm import Simulation
 
 # build water quality configuration dictionary
-config = {'basin': { 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}},\
-			'channel': { 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 10.0}}}
+config = {'basin': { 'type': 'node', 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.0005, 'C_s': 21.0}},\
+			'channel': { 'type': 'link', 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {'C': 10.0}}}
 
 
 # initialize water quality
@@ -76,8 +76,8 @@ import StormReactor
 from pyswmm import Simulation
 
 # build water quality configuration dictionary
-config = {'basin': { 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.0005, 'n': 1.0, 'Co': 10.0}},\
-			'wetland': { 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.000089, 'n': 3.0, 'Co': 10.0}}}
+config = {'basin': { 'type': 'node', 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.0005, 'n': 1.0, 'Co': 10.0}},\
+			'wetland': { 'type': 'node', 'pollutant': 'P1', 'method': 'CSTR', 'parameters': {'k': -0.000089, 'n': 3.0, 'Co': 10.0}}}
 
 
 # initialize water quality
