@@ -147,3 +147,8 @@ If you want to contribute your water quality methods to *StormReactor*, please f
 3. Create tests to confirm your new method works. Please follow the format for node and link tests as shown at https://github.com/kLabUM/StormReactor/tree/master/tests. 
 4. Submit a pull request at https://github.com/kLabUM/StormReactor/pulls to merge your edits with the existing *StormReactor* code base.
 Note: There might be comments, suggestions, and questions. We're all working together to produce cohesive and high-quality software.
+
+## Citing StormReactor
+
+If you use our package, please cite our software as follows:
+Mason, Brooke, Mullapudi, Abhiram, & Kerkez, Branko. (2021). StormReactor (v1.1). Zenodo. https://doi.org/10.5281/zenodo.7110344
