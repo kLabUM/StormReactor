@@ -72,14 +72,14 @@ class waterQuality:
 
         # Parse all the elements and their parameters in the config dictionary
         for asset_ID, asset_info in self.config.items():
-                attribute = self.config[asset_ID]['method']
-                element_type = self.config[asset_ID]['type']
-                if element_type == "node":
-                    element_type = ElementType.Nodes
-                else:
-                    element_type = ElementType.Links
-                # Call the water quality method for each element
-                self.method[attribute](asset_ID, self.config[asset_ID]['pollutant'], self.config[asset_ID]['parameters'], element_type)
+            attribute = self.config[asset_ID]['method']
+            element_type = self.config[asset_ID]['type']
+            if element_type == "node":
+                element_type = ElementType.Nodes
+            else:
+                element_type = ElementType.Links
+            # Call the water quality method for each element
+            self.method[attribute](asset_ID, self.config[asset_ID]['pollutant'], self.config[asset_ID]['parameters'], element_type)
 
         #Update timestep after water quality methods are completed
         self.last_timestep = self.sim.current_time      
