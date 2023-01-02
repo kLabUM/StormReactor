@@ -4,14 +4,17 @@ import numpy as np
 from sklearn.metrics import mean_squared_error as mse
 import pytest
 
+from StormReactor.tests.inps import (LinkTest_variableinflow,
+                                     LinkTest_variableinflow2)
+
 """
 SWMM Water Quality Methods:
-For each method, check the cummulative load in the link where the 
-pollutant transformation is occurring is equivalent (difference <= 0.03) 
+For each method, check the cummulative load in the link where the
+pollutant transformation is occurring is equivalent (difference <= 0.03)
 to the cummulative load directly downstream.
 
 Additional Water Quality Methods:
-For each method, check the cummulative load in the link where the 
+For each method, check the cummulative load in the link where the
 pollutant transformation is occurring is equivalent (difference <= 0.03)
 to the cummulative load downstream.
 """
@@ -24,7 +27,7 @@ def test_EventMeanConc_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation(LinkTest_variableinflow) as sim:
         EMC = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -40,7 +43,7 @@ def test_EventMeanConc_load():
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
         load1 = [a*b for a,b in zip(conc1,flow1)]
-        cum_load1 = np.cumsum(load1)    
+        cum_load1 = np.cumsum(load1)
     error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
     print(error)
     assert error <= 0.03
@@ -53,7 +56,7 @@ def test_ConstantRemoval_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation(LinkTest_variableinflow) as sim:
         CR = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -68,7 +71,7 @@ def test_ConstantRemoval_load():
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
         load1 = [a*b for a,b in zip(conc1,flow1)]
-        cum_load1 = np.cumsum(load1)    
+        cum_load1 = np.cumsum(load1)
     error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
     print(error)
     assert error <= 0.03
@@ -83,7 +86,7 @@ def test_CoRemoval_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow2.inp") as sim:
+    with Simulation(LinkTest_variableinflow2) as sim:
         CR = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -98,11 +101,11 @@ def test_CoRemoval_load():
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
         load1 = [a*b for a,b in zip(conc1,flow1)]
-        cum_load1 = np.cumsum(load1)    
+        cum_load1 = np.cumsum(load1)
     error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
     print(error)
     assert error <= 0.03
- 
+
 
 # ConcDependRemoval
 def test_ConcDependRemoval_load():
@@ -111,7 +114,7 @@ def test_ConcDependRemoval_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation(LinkTest_variableinflow) as sim:
         CDR = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -126,7 +129,7 @@ def test_ConcDependRemoval_load():
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
         load1 = [a*b for a,b in zip(conc1,flow1)]
-        cum_load1 = np.cumsum(load1)    
+        cum_load1 = np.cumsum(load1)
     error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
     print(error)
     assert error <= 0.03
@@ -139,7 +142,7 @@ def test_NthOrderReaction_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation(LinkTest_variableinflow) as sim:
         NOR = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -154,12 +157,12 @@ def test_NthOrderReaction_load():
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
         load1 = [a*b for a,b in zip(conc1,flow1)]
-        cum_load1 = np.cumsum(load1)    
+        cum_load1 = np.cumsum(load1)
     error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
     print(error)
     assert error <= 0.03
 
-  
+
 # GravitySettling
 def test_GravitySettling_load():
     dict1 = {'Culvert': {'type': 'link', 'pollutant': 'P1', 'method': 'GravitySettling', 'parameters': {'k': 0.01, 'C_s': 10.0}}}
@@ -167,7 +170,7 @@ def test_GravitySettling_load():
     conc1 = []
     flow = []
     flow1 = []
-    with Simulation("./inps/LinkTest_variableinflow.inp") as sim:
+    with Simulation(LinkTest_variableinflow) as sim:
         GS = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         outlet = Nodes(sim)["Outlet"]
@@ -182,7 +185,7 @@ def test_GravitySettling_load():
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
         load1 = [a*b for a,b in zip(conc1,flow1)]
-        cum_load1 = np.cumsum(load1)    
+        cum_load1 = np.cumsum(load1)
     error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
     print(error)
     assert error <= 0.03
@@ -211,7 +214,7 @@ def test_Erosion_load():
         load = [a*b for a,b in zip(conc,flow)]
         cum_load = np.cumsum(load)
         load1 = [a*b for a,b in zip(conc1,flow1)]
-        cum_load1 = np.cumsum(load1)    
+        cum_load1 = np.cumsum(load1)
     error = (cum_load1[-1]/cum_load[-1])/cum_load1[-1]
     print(error)
     assert error <= 0.03
@@ -225,7 +228,7 @@ def test_MultipleTreatments():
     conc1 = []
     c_1 = 5.0
     c_2 = 2.0
-    with Simulation("./inps/LinkTest_variableinflow2.inp") as sim:
+    with Simulation(LinkTest_variableinflow2) as sim:
         EMC = waterQuality(sim, dict1)
         culvert = Links(sim)["Culvert"]
         channel = Links(sim)["Channel"]

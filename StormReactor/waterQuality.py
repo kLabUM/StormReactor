@@ -4,6 +4,16 @@ import numpy as np
 from scipy.integrate import ode
 from enum import Enum
 
+# List of Exception Classes
+class PySWMMStepAdvanceNotSupported(Exception):
+    """
+    Exception raised for impossible network trace.
+    """
+    def __init__(self):
+        self.message = "PySWMM sim.step_advance() feature is currently unsuppprted."
+        super().__init__(self.message)
+
+
 class ElementType(Enum):
     Nodes = 0
     Links = 1
@@ -13,12 +23,12 @@ class waterQuality:
     Water quality module for SWMM
 
     This class provides all the necessary code to run StormReactor's
-    water quality module with a SWMM simulation. 
+    water quality module with a SWMM simulation.
 
     Attributes
-    __________ 
+    __________
     config : dict
-        dictionary with node/links where water quality methods are to 
+        dictionary with node/links where water quality methods are to
         be simulated, the pollutants to simulate, the pollutant water
         quality method to simulate, and the method's parameters.
 
@@ -26,7 +36,7 @@ class waterQuality:
         config = {
             '11': {'type': 'node', 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {"C": 10}},
             '5': {'type': 'node', 'pollutant': 'P1', 'method': 'ConstantRemoval', 'parameters': {"R": 5}},
-            'Link1': {'type': 'link', 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {"C": 10}}, 
+            'Link1': {'type': 'link', 'pollutant': 'P1', 'method': 'EventMeanConc', 'parameters': {"C": 10}},
             'Link2': {'type': 'link', 'pollutant': 'P1', 'method': 'ConstantRemoval', 'parameters': {"R": 5}}
             }
 
@@ -40,7 +50,7 @@ class waterQuality:
         Updates the pollutant concentration during a SWMM simulation for
         a CSTR.
     """
-    
+
     # Initialize class
     def __init__(self, sim, config):
         self.sim = sim
@@ -70,6 +80,9 @@ class waterQuality:
         the pollutant concentration during a SWMM simulation.
         """
 
+        if self.sim._advance_seconds:
+            raise(PySWMMStepAdvanceNotSupported)
+
         # Parse all the elements and their parameters in the config dictionary
         for asset_ID, asset_info in self.config.items():
             attribute = self.config[asset_ID]['method']
@@ -82,14 +95,17 @@ class waterQuality:
             self.method[attribute](asset_ID, self.config[asset_ID]['pollutant'], self.config[asset_ID]['parameters'], element_type)
 
         #Update timestep after water quality methods are completed
-        self.last_timestep = self.sim.current_time      
+        self.last_timestep = self.sim.current_time
 
 
     def updateWQState_CSTR(self, index):
         """
-        Runs the water quality method CSTR only and updates the pollutant 
+        Runs the water quality method CSTR only and updates the pollutant
         concentration during a SWMM simulation.
         """
+
+        if self.sim._advance_seconds:
+            raise(PySWMMStepAdvanceNotSupported)
 
         # Parse all the elements and their parameters in the config dictionary
         for asset_ID, asset_info in self.config.items():
@@ -101,9 +117,9 @@ class waterQuality:
                 print("CSTR does not work for links.")
             # Call the water quality method for each element
             self.method[attribute](index, asset_ID, self.config[asset_ID]['pollutant'], self.config[asset_ID]['parameters'], element_type)
-        
+
         #Update timestep after water quality methods are completed
-        self.last_timestep = self.sim.current_time 
+        self.last_timestep = self.sim.current_time
 
 
     def _EventMeanConc(self, ID, pollutantID, parameters, element_type):
@@ -127,7 +143,7 @@ class waterQuality:
         """
         CONSTANT REMOVAL TREATMENT (SWMM Water Quality Manual, 2016)
         Treatment results in a constant percent removal.
-        
+
         R = pollutant removal fraction (unitless)
         """
         # Get pollutant index
@@ -138,14 +154,14 @@ class waterQuality:
             Cin = self.sim._model.getNodePollut(ID, tka.NodePollut.inflowQual.value)[pollutant_index]
             # Calculate new concentration
             Cnew = (1-parameters["R"])*Cin
-            # Set new concentration 
+            # Set new concentration
             self.sim._model.setNodePollut(ID, pollutantID, Cnew)
         else:
             # Get SWMM parameter
             Cin = self.sim._model.getLinkPollut(ID, tka.LinkPollut.reactorQual.value)[pollutant_index]
             # Calculate new concentration
             Cnew = (1-parameters["R"])*Cin
-            # Set new concentration 
+            # Set new concentration
             self.sim._model.setLinkPollut(ID, pollutantID, Cnew)
 
 
@@ -155,7 +171,7 @@ class waterQuality:
         Removal of some pollutant is proportional to the removal of
         some other pollutant.
 
-        R1 = pollutant removal fraction (unitless) 
+        R1 = pollutant removal fraction (unitless)
         R2 = pollutant removal fraction for other pollutant (unitless)
         """
 
@@ -181,9 +197,9 @@ class waterQuality:
     def _ConcDependRemoval(self, ID, pollutantID, parameters, element_type):
         """
         CONCENTRATION-DEPENDENT REMOVAL (SWMM Water Quality Manual, 2016)
-        When higher pollutant removal efficiencies occur with higher 
+        When higher pollutant removal efficiencies occur with higher
         influent concentrations.
-        
+
         R_l = lower removal rate (unitless)
         BC  = boundary concentration that determines removal rate (SI/US: mg/L)
         R_u = upper removal rate (unitless)
@@ -222,7 +238,7 @@ class waterQuality:
             NTH ORDER REACTION KINETICS (SWMM Water Quality Manual, 2016)
             When treatment of pollutant X exhibits n-th order reaction kinetics
             where the instantaneous reaction rate is kC^n.
-            
+
             k   = reaction rate constant (SI: m/hr, US: ft/hr)
             n   = reaction order (first order, second order, etc.) (unitless)
             """
@@ -255,9 +271,9 @@ class waterQuality:
     def _kCModel(self, ID, pollutantID, parameters, element_type):
         """
         K-C_STAR MODEL (SWMM Water Quality Manual, 2016)
-        The first-order model with background concentration made popular by 
+        The first-order model with background concentration made popular by
         Kadlec and Knight (1996) for long-term treatment performance of wetlands.
-        
+
         k   = reaction rate constant (SI: m/hr, US: ft/hr)
         C_s = constant residual concentration that always remains (SI/US: mg/L)
         """
@@ -280,7 +296,7 @@ class waterQuality:
             # Calculate new concentration
             Cnew = (1-R)*Cin
             # Set new concentration
-            self.sim._model.setNodePollut(ID, pollutantID, Cnew) 
+            self.sim._model.setNodePollut(ID, pollutantID, Cnew)
         else:
             print("kCModel does not work for links.")
 
@@ -303,7 +319,7 @@ class waterQuality:
         current_step = self.sim.current_time
         # Calculate model dt in seconds
         dt = (current_step - self.last_timestep).total_seconds()
-        
+
         if element_type == ElementType.Nodes:
             # Get SWMM parameters
             Cin = self.sim._model.getNodePollut(ID, tka.NodePollut.inflowQual.value)[pollutant_index]
@@ -338,12 +354,12 @@ class waterQuality:
 
     """
     Need to add conduit velocity getter to swmm/pyswmm
-    def _Erosion(self, ID, pollutantID, parameters, flag): 
-        
+    def _Erosion(self, ID, pollutantID, parameters, flag):
+
         ENGELUND-HANSEN EROSION (1967)
         Engelund and Hansen (1967) developed a procedure for predicting stage-
         discharge relationships and sediment transport in alluvial streams.
-        
+
         w   = channel width (SI: m, US: ft)
         So  = bottom slope (SI: m/m, US: ft/ft)
         Ss  = specific gravity of sediment (for soil usually between 2.65-2.80)
@@ -351,7 +367,7 @@ class waterQuality:
         d   = depth (SI: m, US: ft)
         qt  = sediment discharge per unit width (SI: kg/m-s, US: lb/ft-s)
         Qt  = sediment discharge (SI: kg/s, US: lb/s)
-        
+
 
         parameters = parameters
 
@@ -370,7 +386,7 @@ class waterQuality:
             Q = self.sim._model.getLinkResult(ID, 0)
             d = self.sim._model.getLinkResult(ID, 1)
             v = self.sim._model.getConduitVelocity(ID)
-            
+
             # Erosion calculations for US units
             if self.sim._model.getSimUnit(0) == "US":
                 g = 32.2            # ft/s^2
@@ -422,8 +438,8 @@ class waterQuality:
         is modeled assuming it is not in steady state. This is because
         outflow, inflow, volume, and concentration are constantly changing.
 
-        NOTE: You do not need to call this method, only the CSTR_solver. 
-        CSTR_tank is intitalized in __init__ in Node_Treatment.  
+        NOTE: You do not need to call this method, only the CSTR_solver.
+        CSTR_tank is intitalized in __init__ in Node_Treatment.
         """
         dCdt = (Qin*Cin - Qout*C)/V + k*C**n
         return dCdt
@@ -436,10 +452,10 @@ class waterQuality:
         is modeled assuming it is not in steady state. This is because
         outflow, inflow, volume, and concentration are constantly changing.
         Therefore, Scipy.Integrate.ode solver is used to solve for concentration.
-        
+
         NOTE: You only need to call this method, not CSTR_tank. CSTR_tank is
-        intitalized in __init__ in Node_Treatment.  
-        
+        intitalized in __init__ in Node_Treatment.
+
         k   = reaction rate constant (SI/US: 1/s)
         n   = reaction order (first order, second order, etc.) (unitless)
         c0  = intital concentration inside reactor (SI/US: mg/L)
@@ -479,7 +495,7 @@ class waterQuality:
         LI & DAVIS BIORETENTION CELL TOTAL PHOSPHOURS MODEL (2016)
         Li and Davis (2016) developed a dissolved and particulate phosphorus
         model for bioretention cells.
-    
+
         B1    = coefficient related to the rate at which Ceq approaches Co (SI/US: 1/s)
         Ceq0  = initial DP or PP equilibrium concentration value for an event (SI/US: mg/L)
         k     = reaction rate constant (SI/US: 1/s)
@@ -518,4 +534,3 @@ class waterQuality:
                 t = 0
         else:
             print("Phosphorus does not work for links.")
-
