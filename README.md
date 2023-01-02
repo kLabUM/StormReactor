@@ -1,6 +1,6 @@
 # *StormReactor*: Python package for modeling any pollutant generation or treatment method in EPA SWMM
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
-
+[![Python package](https://github.com/kLabUM/StormReactor/actions/workflows/python-package.yml/badge.svg)](https://github.com/kLabUM/StormReactor/actions/workflows/python-package.yml)
 ## Overview 
 
 *StormReactor* was developed to expand the ability to model stormwater quality and water quality based real-time control in EPA's Stormwater Management Model (SWMM). It is a natural extension of *Open-Storm*'s(http://open-storm.org/) mission to open up and ease access into the technical world of smart stormwater systems. *StormReactor* enables users to model any stormwater pollutant treatment or generation method in any node or link in a stormwater network. A user can implement any SWMM treatment function defined in the *SWMM Reference Manual Volume III: Water Quality*, select from a few additional methods we built, or create their own. 
