@@ -89,6 +89,51 @@ with Simulation('example2.inp') as sim:
 		WQ.updateWQState_CSTR(index)
 
 ```
+## Water Quality Methods
+
+- `EventMeanConc`: 
+    Event Mean Concentration -- treatment results in a constant concentration.
+    Treatment method parameters required:
+        `C` = constant treatment concentration for each pollutant (SI/US: mg/L)
+
+- `ConstantRemoval`
+    Constant Removal -- treatment results in a constant percent removal.
+    Treatment method parameters required:
+        `R` = pollutant removal fraction (unitless)
+
+- `CoRemoval`:
+    Co-Removal Treatment -- removal of some pollutant is proportional to the removal of some other pollutant
+    Treatment method parameters required:
+        `R1` = pollutant removal fraction (unitless) 
+        `R2` = pollutant removal fraction for other pollutant (unitless)
+
+- `ConcDependRemoval`:
+    Concentration-Dependent Removal -- when higher pollutant removal efficiencies occur with higher influent concentrations
+    Treatment method parameters required:
+        `R_l` = lower removal rate (unitless)
+        `BC`  = boundary concentration that determines removal rate (SI/US: mg/L)
+        `R_u` = upper removal rate (unitless)
+
+- `NthOrderReaction`:
+    Nth Order Reaction Kinetics -- when treatemtn of pollutant X exhibits n-th order reaction kinetics where the instantaneous reaction rate is kC^n
+    Treatment method parameters required:
+        `k`   = reaction rate constant (SI: m/hr, US: ft/hr)
+        `n`   = reaction order (first order, second order, etc.) (unitless)
+
+- `kCModel`:
+    K-C Star Model -- the first-order model with background concentration made popular by Kadlec and Knight (1996) for long-term treatment performance of wetlands
+    Treatment method parameters required:
+        `k`   = reaction rate constant (SI: m/hr, US: ft/hr)
+        `C_s` = constant residual concentration that always remains (SI/US: mg/L)
+
+- `GravitySettling`:
+    Gravity Settling -- during a quiescent period of time within a storage volume, a fraction of suspended particles will settle out
+    Treatment method parameters required:
+        `k`   = reaction rate constant (SI: m/hr, US: ft/hr)
+        `C_s` = constant residual concentration that always remains (SI/US: mg/L)
+
+StormReactor also includes a few additional water quality methods, like a CSTR and a bioretention cell phosphorus model. Users can also create their own water quality methods. Please see the [StormReactor repository](https://github.com/kLabUM/StormReactor) above for more details.
+
 
 
 ## Creating Your Own Water Quality Method
