@@ -5,6 +5,8 @@
 
 *StormReactor* was developed to expand the ability to model stormwater quality and water quality based real-time control in EPA's Stormwater Management Model (SWMM). It is a natural extension of *Open-Storm*'s(http://open-storm.org/) mission to open up and ease access into the technical world of smart stormwater systems. *StormReactor* enables users to model any stormwater pollutant treatment or generation method in any node or link in a stormwater network. A user can implement any SWMM treatment function defined in the *SWMM Reference Manual Volume III: Water Quality*, select from a few additional methods we built, or create their own. 
 
+Note: In the current implememntation, you cannot skip time steps when using *StormReactor*.
+
 Note: In order to use *StormReactor*'s ability to change the pollutant concentration in a node, you MUST have treatment enabled in the SWMM input file. This means if you open your input file in a text editor, it should have a treatment listed for the node you want to access. When *StormReactor* runs, it will replace the treatment in the input file with the method you want. See snippet from an example input file below.
 
 ```example1.inp
